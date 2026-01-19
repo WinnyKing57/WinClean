@@ -15,7 +15,7 @@ import os
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 dev_path = os.path.join(project_root)
 if os.path.isdir(os.path.join(dev_path, 'src', 'cleaner')): # Vérifie si on est en dév
-    sys.path.insert(0, dev_path)
+    sys.path.insert(0, os.path.join(dev_path, 'src'))
 
 # 2. Chemin pour le système installé (après `dpkg -i`)
 #    Le packaging Debian garantit que ce chemin est fixe. C'est un peu
