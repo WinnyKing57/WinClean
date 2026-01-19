@@ -1,0 +1,12 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Activer toutes les cibles de debhelper en séquence.
+# C'est la forme la plus simple et la plus moderne pour les paquets simples.
+%:
+	dh $@
+
+override_dh_fixperms:
+	dh_fixperms
+	chmod +x debian/debian-storage-analyzer/usr/bin/debian-storage-analyzer
+	chmod +x debian/debian-storage-analyzer/usr/libexec/debian-storage-analyzer-helper
