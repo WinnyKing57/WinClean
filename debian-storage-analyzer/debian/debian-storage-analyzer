@@ -1,2 +1,0 @@
-#!/bin/sh
-/usr/bin/python3 /usr/share/debian-storage-analyzer/main/__main__.py "$@"
