@@ -21,18 +21,13 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y build-essential debhelper
 
-    - name: Prepare source directory for build
-      run: |
-        # dpkg-buildpackage expects the source directory to be named <package>-<version>
-        mv debian-storage-analyzer debian-storage-analyzer-0.1.0
-
     - name: Build the Debian package
       run: |
-        cd debian-storage-analyzer-0.1.0
+        cd debian-storage-analyzer
         dpkg-buildpackage -us -uc
 
     - name: Upload .deb artifact
       uses: actions/upload-artifact@v4
       with:
         name: debian-package
-        path: "../*.deb"
+        path: ../*.deb
