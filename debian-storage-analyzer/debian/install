@@ -1,0 +1,11 @@
+# Fichiers principaux de l'application
+src/* usr/share/debian-storage-analyzer/
+
+# Le script helper exécuté par pkexec
+src/helpers/helper.py usr/libexec/debian-storage-analyzer-helper
+
+# Fichier de règles PolicyKit
+data/polkit/*.policy usr/share/polkit-1/actions/
+
+# Le lanceur exécutable
+debian/debian-storage-analyzer.desktop usr/share/applications/
