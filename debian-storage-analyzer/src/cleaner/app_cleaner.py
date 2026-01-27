@@ -59,6 +59,39 @@ def clean_chromium_cache():
 
     return freed_space
 
+def clean_flatpak_cache():
+    """Nettoie le cache Flatpak."""
+    flatpak_cache = Path.home() / ".var/app"
+    freed_space = 0
+    if not flatpak_cache.is_dir():
+        return 0
+
+    for app_dir in flatpak_cache.iterdir():
+        cache_dir = app_dir / "cache"
+        if cache_dir.is_dir():
+            size = get_dir_size(str(cache_dir))
+            try:
+                shutil.rmtree(str(cache_dir))
+                freed_space += size
+            except OSError:
+                continue
+    return freed_space
+
+def clean_snap_cache():
+    """Nettoie le cache Snap (nécessite souvent root pour certains dossiers)."""
+    snap_cache = Path("/var/lib/snapd/cache")
+    if not snap_cache.is_dir():
+        return 0
+
+    size = get_dir_size(str(snap_cache))
+    try:
+        # On ne peut pas facilement faire rmtree sur /var/lib/snapd/cache sans root
+        # Cette fonction sera appelée par le helper si possible
+        subprocess.run(['rm', '-rf', '/var/lib/snapd/cache/*'], shell=True)
+        return size
+    except Exception:
+        return 0
+
 
 if __name__ == '__main__':
     print("--- Test du module de nettoyage d'applications ---")
