@@ -77,68 +77,68 @@ Ce plan d'implémentation transforme le Debian Storage Analyzer existant en une 
 - [x] 4. Checkpoint - Vérifier les fonctionnalités d'analyse
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 5. Nettoyage Intelligent et Sécurisé
+- [x] 5. Nettoyage Intelligent et Sécurisé
   - Implémenter le mode dry-run avec prévisualisation
   - Créer les nettoyeurs spécifiques par application
   - Ajouter la planification automatique avec systemd/cron
   - Étendre le nettoyage système (Snap, thumbnails, trash)
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 9.2_
 
-- [ ] 5.1 Write property test for multiple selection and bulk operations
+- [x] 5.1 Write property test for multiple selection and bulk operations
   - **Property 9: Multiple Selection and Bulk Operations**
   - **Validates: Requirements 3.1, 5.4**
 
-- [ ] 5.2 Write property test for dry-run safety
+- [x] 5.2 Write property test for dry-run safety
   - **Property 10: Dry-Run Safety**
   - **Validates: Requirements 3.2**
 
-- [ ] 5.3 Write property test for scheduled task integration
+- [x] 5.3 Write property test for scheduled task integration
   - **Property 11: Scheduled Task Integration**
   - **Validates: Requirements 3.3**
 
-- [ ] 5.4 Write property test for application-specific cleaning
+- [x] 5.4 Write property test for application-specific cleaning
   - **Property 12: Application-Specific Cleaning**
   - **Validates: Requirements 3.4**
 
-- [ ] 5.5 Write property test for system component cleaning
+- [x] 5.5 Write property test for system component cleaning
   - **Property 28: System Component Cleaning**
   - **Validates: Requirements 9.2**
 
-- [ ] 6. Surveillance Système Temps Réel
+- [x] 6. Surveillance Système Temps Réel
   - Créer le module Real-Time Monitor avec psutil
   - Implémenter les notifications desktop avec libnotify
   - Ajouter les indicateurs visuels pour activité inhabituelle
   - Créer les barres de progression pour opérations longues
   - _Requirements: 4.1, 4.2, 4.3, 4.5, 6.1_
 
-- [ ] 6.1 Write property test for real-time monitoring
+- [x] 6.1 Write property test for real-time monitoring
   - **Property 14: Real-Time Monitoring**
   - **Validates: Requirements 4.1, 4.5**
 
-- [ ] 6.2 Write property test for notification system
+- [x] 6.2 Write property test for notification system
   - **Property 15: Notification System**
   - **Validates: Requirements 4.2, 6.2**
 
-- [ ] 6.3 Write property test for visual feedback
+- [x] 6.3 Write property test for visual feedback
   - **Property 16: Visual Feedback for Unusual Activity**
   - **Validates: Requirements 4.3**
 
-- [ ] 6.4 Write property test for progress indication
+- [x] 6.4 Write property test for progress indication
   - **Property 19: Progress Indication**
   - **Validates: Requirements 6.1**
 
-- [ ] 7. Gestion de Configuration et Préférences
+- [x] 7. Gestion de Configuration et Préférences
   - Créer le système de configuration JSON
   - Implémenter la sauvegarde/restauration des paramètres
   - Ajouter les options de personnalisation interface
   - Créer les préférences de nettoyage et analyse
   - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5_
 
-- [ ] 7.1 Write property test for configuration persistence
+- [x] 7.1 Write property test for configuration persistence
   - **Property 22: Configuration Persistence**
   - **Validates: Requirements 7.1, 7.2, 7.3, 7.4**
 
-- [ ] 7.2 Write property test for configuration backup and restore
+- [x] 7.2 Write property test for configuration backup and restore
   - **Property 23: Configuration Backup and Restore**
   - **Validates: Requirements 7.5**
 
