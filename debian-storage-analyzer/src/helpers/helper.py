@@ -25,7 +25,7 @@ if installed_path not in sys.path:
     sys.path.insert(0, installed_path)
 
 try:
-    from cleaner import system_cleaner
+    from cleaner import system_cleaner, app_cleaner
 except ImportError as e:
     print(f"Erreur d'importation : {e}", file=sys.stderr)
     print(f"Python Path: {sys.path}", file=sys.stderr)
@@ -43,7 +43,7 @@ def main():
 
     if len(sys.argv) < 2:
         print("Usage: pkexec debian-storage-analyzer-helper <action>", file=sys.stderr)
-        print("Actions disponibles: apt, temp, logs", file=sys.stderr)
+        print("Actions disponibles: apt, autoremove, temp, logs, snap", file=sys.stderr)
         sys.exit(1)
 
     action = sys.argv[1]
@@ -69,6 +69,19 @@ def main():
             print("Les journaux ont été nettoyés avec succès.")
         else:
             print("Erreur lors du nettoyage des journaux.")
+
+    elif action == 'autoremove':
+        print("Suppression des paquets inutiles...")
+        success = system_cleaner.autoremove_packages()
+        if success:
+            print("Autoremove terminé.")
+        else:
+            print("Erreur lors de l'autoremove.")
+
+    elif action == 'snap':
+        print("Nettoyage du cache Snap...")
+        freed_space = app_cleaner.clean_snap_cache()
+        print(f"Espace libéré : {freed_space / 1024 / 1024:.2f} MB")
 
     else:
         print(f"Action '{action}' non reconnue.", file=sys.stderr)

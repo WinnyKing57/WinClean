@@ -37,6 +37,19 @@ def clean_apt_cache():
         print(f"Erreur lors du nettoyage du cache APT : {e}")
         return 0
 
+def autoremove_packages():
+    """
+    Supprime les paquets orphelins (dépendances inutiles).
+    Nécessite les privilèges root.
+    Retourne True en cas de succès.
+    """
+    try:
+        subprocess.run(['apt-get', 'autoremove', '-y'], check=True, capture_output=True)
+        return True
+    except (subprocess.CalledProcessError, PermissionError) as e:
+        print(f"Erreur lors de l'autoremove APT : {e}")
+        return False
+
 import time
 
 def clean_temp_files(dirs_to_clean=['/tmp', '/var/tmp'], days_old=7):
