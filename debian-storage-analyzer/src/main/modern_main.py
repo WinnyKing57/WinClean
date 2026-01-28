@@ -27,6 +27,9 @@ from analyzer.package_analyzer import PackageAnalyzer
 from analyzer.duplicate_detector import DuplicateDetector
 from cleaner import system_cleaner, app_cleaner
 from helpers.history_db import HistoryManager
+from helpers.report_generator import ReportGenerator
+from config.configuration_manager import ConfigurationManager
+from cleaner.scheduled_cleaner import ScheduledCleaner
 from ui.modern_sidebar import ModernSidebar
 from ui.theme_manager import ThemeManager
 from ui.tooltip_manager import TooltipManager
@@ -45,10 +48,16 @@ class ModernMainWindow(Gtk.ApplicationWindow):
         self._load_css()
 
         # Initialiser les gestionnaires
+        self.config_manager = ConfigurationManager()
         self.theme_manager = ThemeManager(self)
         self.tooltip_manager = TooltipManager()
         self.sidebar = ModernSidebar()
         self.history_manager = HistoryManager()
+        self.package_analyzer = PackageAnalyzer()
+        self.duplicate_detector = DuplicateDetector()
+        self.scheduled_cleaner = ScheduledCleaner()
+        self.abort_event = threading.Event()
+        self.last_analysis_results = []
         
         # Créer l'interface
         self._setup_ui()
@@ -883,9 +892,10 @@ class ModernMainWindow(Gtk.ApplicationWindow):
             total_size += item.size
             categorized_data[file_type_key] = categorized_data.get(file_type_key, 0) + item.size
 
+            size_display = self.format_size(item.size)
             self.analyzer_liststore.append([
                 os.path.basename(item.path),
-                size_fmt,
+                size_display,
                 item.is_dir,
                 file_type_display
             ])
