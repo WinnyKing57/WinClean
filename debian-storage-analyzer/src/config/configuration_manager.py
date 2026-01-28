@@ -89,7 +89,7 @@ class Configuration:
     cleaning: CleaningPreferences = field(default_factory=CleaningPreferences)
     monitoring: MonitoringPreferences = field(default_factory=MonitoringPreferences)
     reporting: ReportingPreferences = field(default_factory=ReportingPreferences)
-    version: str = "1.0.0"
+    version: str = "2.0.0"
     last_updated: str = field(default_factory=lambda: datetime.now().isoformat())
 
 
