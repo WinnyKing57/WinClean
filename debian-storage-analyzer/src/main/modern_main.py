@@ -1065,7 +1065,7 @@ class ModernApplication(Gtk.Application):
     """Application modernisée"""
     
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, application_id="fr.jules.debianstorageanalyzer.modern",
+        super().__init__(*args, application_id="fr.jules.debianstorageanalyzer",
                          flags=Gio.ApplicationFlags.FLAGS_NONE, **kwargs)
         self.window = None
 

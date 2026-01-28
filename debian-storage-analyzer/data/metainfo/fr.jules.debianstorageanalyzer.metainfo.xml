@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>debian-storage-analyzer.desktop</id>
+  <id>fr.jules.debianstorageanalyzer</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0</project_license>
   <name>Analyseur de Stockage Debian</name>
@@ -16,16 +16,18 @@
       <li>Interface moderne et intuitive.</li>
     </ul>
   </description>
-  <launchable type="desktop-id">debian-storage-analyzer.desktop</launchable>
-  <screenshots>
-    <screenshot type="default">
-      <caption>Tableau de bord principal</caption>
-      <image>https://github.com/WinnyKing57/WinClean/raw/main/screenshot.png</image>
-    </screenshot>
-  </screenshots>
+  <launchable type="desktop-id">fr.jules.debianstorageanalyzer.desktop</launchable>
   <url type="homepage">https://github.com/WinnyKing57/WinClean</url>
-  <developer_name>WinnyKing</developer_name>
+  <developer>
+    <name>WinnyKing</name>
+  </developer>
+  <categories>
+    <category>System</category>
+    <category>Utility</category>
+  </categories>
   <releases>
     <release version="2.1.0" date="2024-07-31" />
   </releases>
+  <content_rating type="oars-1.1" />
+  <icon type="stock">drive-harddisk</icon>
 </component>
