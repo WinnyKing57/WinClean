@@ -1,0 +1,149 @@
+/* Modern Styles for Debian Storage Analyzer */
+
+.sidebar {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+}
+
+.sidebar-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #3498db;
+}
+
+.sidebar-subtitle {
+    font-size: 0.8em;
+    color: #bdc3c7;
+}
+
+.sidebar-button {
+    color: #ecf0f1;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.sidebar-button:hover {
+    background-color: #34495e;
+}
+
+.sidebar-button-active {
+    background-color: #3498db;
+    color: white;
+}
+
+.sidebar-button-active:hover {
+    background-color: #2980b9;
+}
+
+.page-title {
+    font-size: 2.2em;
+    font-weight: 800;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.page-subtitle {
+    font-size: 1.2em;
+    font-weight: 300;
+    color: #95a5a6;
+    margin-bottom: 20px;
+}
+
+.version-tag {
+    background-color: #34495e;
+    color: white;
+    font-size: 0.7em;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.stat-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border: 1px solid #f1f2f6;
+}
+
+.stat-card label {
+    font-weight: 600;
+    color: #2f3542;
+}
+
+.stat-label {
+    font-weight: bold;
+    color: #34495e;
+}
+
+.stat-value {
+    font-family: monospace;
+    font-size: 1.2em;
+    color: #27ae60;
+}
+
+.progress-modern {
+    min-height: 10px;
+}
+
+.suggested-action {
+    background-color: #3498db;
+    color: white;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 4px 6px rgba(52, 152, 219, 0.2);
+    transition: all 0.2s;
+}
+
+.suggested-action:hover {
+    background-color: #2980b9;
+    box-shadow: 0 6px 12px rgba(52, 152, 219, 0.3);
+    margin-top: -1px;
+}
+
+.suggested-action:hover {
+    background-color: #2980b9;
+}
+
+.destructive-action {
+    background-color: #e74c3c;
+    color: white;
+    font-weight: bold;
+}
+
+.destructive-action:hover {
+    background-color: #c0392b;
+}
+
+.cleaner-name {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.cleaner-description {
+    color: #7f8c8d;
+    font-size: 0.9em;
+}
+
+.enhanced-treeview {
+    border: 1px solid #dcdde1;
+    border-radius: 4px;
+}
+
+.sidebar-footer {
+    font-size: 0.85em;
+    color: #bdc3c7;
+}
+
+.sidebar-footer-btn {
+    color: #3498db;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.sidebar-footer-btn:hover {
+    color: #2980b9;
+}
