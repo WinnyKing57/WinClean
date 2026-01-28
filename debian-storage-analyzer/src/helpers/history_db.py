@@ -93,14 +93,6 @@ class HistoryManager:
             rows = cursor.fetchall()
             return [dict(row) for row in rows]
 
-    def clear_all_history(self):
-        """Supprime tout l'historique de la base de données."""
-        with self._get_connection() as conn:
-            cursor = conn.cursor()
-            cursor.execute("DELETE FROM scans")
-            cursor.execute("DELETE FROM cleanings")
-            conn.commit()
-
     def get_total_freed_space(self) -> int:
         """Calcule l'espace total libéré par tous les nettoyages."""
         with self._get_connection() as conn:

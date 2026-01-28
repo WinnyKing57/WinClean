@@ -27,9 +27,6 @@ from analyzer.package_analyzer import PackageAnalyzer
 from analyzer.duplicate_detector import DuplicateDetector
 from cleaner import system_cleaner, app_cleaner
 from helpers.history_db import HistoryManager
-from helpers.report_generator import ReportGenerator
-from config.configuration_manager import ConfigurationManager
-from cleaner.scheduled_cleaner import ScheduledCleaner, CleaningSchedule
 from ui.modern_sidebar import ModernSidebar
 from ui.theme_manager import ThemeManager
 from ui.tooltip_manager import TooltipManager
@@ -40,7 +37,7 @@ class ModernMainWindow(Gtk.ApplicationWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.set_title(_("Analyseur de Stockage Debian 2.1"))
+        self.set_title(_("Analyseur de Stockage Debian 2.0"))
         self.set_default_size(1000, 750)
         self.set_position(Gtk.WindowPosition.CENTER)
         
@@ -52,12 +49,6 @@ class ModernMainWindow(Gtk.ApplicationWindow):
         self.tooltip_manager = TooltipManager()
         self.sidebar = ModernSidebar()
         self.history_manager = HistoryManager()
-        self.config_manager = ConfigurationManager()
-        self.scheduled_cleaner = ScheduledCleaner()
-        self.package_analyzer = PackageAnalyzer()
-        self.duplicate_detector = DuplicateDetector()
-        self.last_analysis_results = []
-        self.abort_event = threading.Event()
         
         # Créer l'interface
         self._setup_ui()
@@ -136,7 +127,7 @@ class ModernMainWindow(Gtk.ApplicationWindow):
         title.set_halign(Gtk.Align.START)
         header_hbox.pack_start(title, False, False, 0)
 
-        version_tag = Gtk.Label(label="v2.1.0")
+        version_tag = Gtk.Label(label="v2.0.0")
         version_tag.get_style_context().add_class("version-tag")
         header_hbox.pack_start(version_tag, False, False, 0)
 
@@ -598,16 +589,15 @@ class ModernMainWindow(Gtk.ApplicationWindow):
         title.get_style_context().add_class("page-title")
         title.set_halign(Gtk.Align.START)
         header_box.pack_start(title, False, False, 0)
-
+        
         subtitle = Gtk.Label(label=_("Suivez l'évolution de votre stockage et vos actions de nettoyage"))
         subtitle.get_style_context().add_class("page-subtitle")
         subtitle.set_halign(Gtk.Align.START)
         header_box.pack_start(subtitle, False, False, 0)
         self.history_page.pack_start(header_box, False, False, 0)
-
+        
         # Notebook pour séparer scans et nettoyages
         notebook = Gtk.Notebook()
-        notebook.set_tab_pos(Gtk.PositionType.TOP)
 
         # Tab 1: Analyses
         scan_box = self._create_scan_history_view()
@@ -616,29 +606,17 @@ class ModernMainWindow(Gtk.ApplicationWindow):
         # Tab 2: Nettoyages
         clean_box = self._create_cleaning_history_view()
         notebook.append_page(clean_box, Gtk.Label(label=_("Nettoyages")))
-        
+
         # Tab 3: Tendances
         trend_box = self._create_trend_view()
         notebook.append_page(trend_box, Gtk.Label(label=_("Tendances")))
-        
+
         self.history_page.pack_start(notebook, True, True, 0)
 
-        # Barre d'outils historique
-        history_toolbar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-
         # Bouton Actualiser
-        refresh_btn = Gtk.Button(label=_("Actualiser"))
-        refresh_btn.get_style_context().add_class("suggested-action")
+        refresh_btn = Gtk.Button(label=_("Actualiser l'historique"))
         refresh_btn.connect("clicked", lambda w: self._update_history_views())
-        history_toolbar.pack_start(refresh_btn, False, False, 0)
-
-        # Bouton Vider
-        clear_history_btn = Gtk.Button(label=_("Vider l'historique"))
-        clear_history_btn.get_style_context().add_class("destructive-action")
-        clear_history_btn.connect("clicked", self.on_clear_history_clicked)
-        history_toolbar.pack_start(clear_history_btn, False, False, 0)
-
-        self.history_page.pack_start(history_toolbar, False, False, 0)
+        self.history_page.pack_start(refresh_btn, False, False, 0)
 
         self.stack.add_named(self.history_page, "history")
 
@@ -838,8 +816,12 @@ class ModernMainWindow(Gtk.ApplicationWindow):
         dialog.format_secondary_text(_("Êtes-vous sûr de vouloir supprimer tout l'historique des analyses et nettoyages ?"))
         response = dialog.run()
         if response == Gtk.ResponseType.YES:
+            # Pour l'instant on réinitialise juste le fichier si on veut faire simple,
+            # ou on ajoute une méthode au manager.
+            # On va simuler en supprimant les données si le manager le permet (je devrais l'ajouter).
             try:
-                self.history_manager.clear_all_history()
+                os.remove(self.history_manager.db_path)
+                self.history_manager._init_db()
                 self._update_history_views()
                 self.show_info_dialog(_("Historique"), _("L'historique a été vidé."))
             except Exception as e:
@@ -886,31 +868,18 @@ class ModernMainWindow(Gtk.ApplicationWindow):
 
     def run_analysis_thread(self, folder):
         """Thread d'analyse"""
-        try:
-            results = analyze_directory(folder, self.abort_event)
-            GLib.idle_add(self.on_analysis_finished, results, folder)
-        except Exception as e:
-            GLib.idle_add(self.show_info_dialog, _("Erreur d'analyse"), str(e))
-            GLib.idle_add(self.analyzer_spinner.stop)
-            GLib.idle_add(self.stop_btn.set_sensitive, False)
+        results = analyze_directory(folder)
+        GLib.idle_add(self.on_analysis_finished, results, folder)
 
     def on_analysis_finished(self, results, folder):
         """Callback fin d'analyse"""
-        self.stop_btn.set_sensitive(False)
-        if self.abort_event.is_set():
-            self.show_info_dialog(_("Analyse annulée"), _("L'analyse a été interrompue par l'utilisateur."))
-            self.analyzer_spinner.stop()
-            return
-
         total_size = 0
         categorized_data = {"directory": 0, "file": 0}
-        self.last_analysis_results = []
 
         for item in results:
             file_type_key = "directory" if item.is_dir else "file"
             file_type_display = _("Dossier") if item.is_dir else _("Fichier")
 
-            size_fmt = self.format_size(item.size)
             total_size += item.size
             categorized_data[file_type_key] = categorized_data.get(file_type_key, 0) + item.size
 
@@ -920,7 +889,6 @@ class ModernMainWindow(Gtk.ApplicationWindow):
                 item.is_dir,
                 file_type_display
             ])
-            self.last_analysis_results.append((os.path.basename(item.path), size_fmt, file_type_display))
 
         # Enregistrer dans l'historique
         self.history_manager.record_scan(folder, total_size, categorized_data)

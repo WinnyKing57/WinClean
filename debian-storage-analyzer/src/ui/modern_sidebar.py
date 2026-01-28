@@ -132,7 +132,7 @@ class ModernSidebar:
         footer_box.pack_start(separator, False, False, 0)
         
         # Version info
-        version_label = Gtk.Label(label=_("Version 2.1.0"))
+        version_label = Gtk.Label(label=_("Version 2.0.0"))
         version_label.get_style_context().add_class("sidebar-footer")
         version_label.set_halign(Gtk.Align.CENTER)
         version_label.set_margin_top(10)
@@ -156,7 +156,7 @@ class ModernSidebar:
     def _on_about_clicked(self, button):
         dialog = Gtk.AboutDialog()
         dialog.set_program_name(_("Analyseur de Stockage Debian"))
-        dialog.set_version("2.1.0")
+        dialog.set_version("2.0.0")
         dialog.set_authors(["WinnyKing"])
         dialog.set_website("https://github.com/WinnyKing57/WinClean")
         dialog.set_comments(_("Un outil moderne pour analyser et nettoyer votre système Debian."))
