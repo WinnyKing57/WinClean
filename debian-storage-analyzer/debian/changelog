@@ -1,5 +1,17 @@
-debian-storage-analyzer (0.1.0) unstable; urgency=medium
+debian-storage-analyzer (2.1.0) unstable; urgency=medium
 
-  * Initial release.
+  * New Release Version 2.1.0.
+  * Added AppStream metadata for Discover and Software Centers integration.
+  * Minor UI fixes and improvements.
 
- -- Jules A.I. Developer <jules@example.com>  Wed, 31 Jul 2024 10:00:00 +0000
+ -- WinnyKing <winnyking.site@gmail.com>  Wed, 31 Jul 2024 13:00:00 +0000
+
+debian-storage-analyzer (2.0.0) unstable; urgency=medium
+
+  * Major Release Version 2.0.0.
+  * Improved UI/UX with modern design.
+  * Integrated history tracking and reporting.
+  * Full desktop integration.
+  * Developer changed to WinnyKing.
+
+ -- WinnyKing <winnyking.site@gmail.com>  Wed, 31 Jul 2024 12:00:00 +0000

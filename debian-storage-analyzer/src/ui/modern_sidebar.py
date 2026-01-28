@@ -14,6 +14,8 @@ class ModernSidebar:
         self.sections = [
             ("dashboard", _("Dashboard"), "view-grid-symbolic"),
             ("analyzer", _("Analyse"), "folder-symbolic"),
+            ("duplicates", _("Doublons"), "edit-copy-symbolic"),
+            ("packages", _("Paquets"), "system-software-install-symbolic"),
             ("cleaner", _("Nettoyage"), "edit-clear-symbolic"),
             ("history", _("Historique"), "document-open-recent-symbolic"),
             ("settings", _("Paramètres"), "preferences-system-symbolic")
@@ -130,13 +132,39 @@ class ModernSidebar:
         footer_box.pack_start(separator, False, False, 0)
         
         # Version info
-        version_label = Gtk.Label(label=_("Version 2.0"))
+        version_label = Gtk.Label(label=_("Version 2.1.0"))
         version_label.get_style_context().add_class("sidebar-footer")
         version_label.set_halign(Gtk.Align.CENTER)
         version_label.set_margin_top(10)
         footer_box.pack_start(version_label, False, False, 0)
+
+        # Developer info
+        dev_label = Gtk.Label(label=_("Par WinnyKing"))
+        dev_label.get_style_context().add_class("sidebar-footer")
+        dev_label.set_halign(Gtk.Align.CENTER)
+        footer_box.pack_start(dev_label, False, False, 0)
+
+        # About button
+        about_btn = Gtk.Button(label=_("À propos"))
+        about_btn.set_relief(Gtk.ReliefStyle.NONE)
+        about_btn.get_style_context().add_class("sidebar-footer-btn")
+        about_btn.connect("clicked", self._on_about_clicked)
+        footer_box.pack_start(about_btn, False, False, 0)
         
         return footer_box
+
+    def _on_about_clicked(self, button):
+        dialog = Gtk.AboutDialog()
+        dialog.set_program_name(_("Analyseur de Stockage Debian"))
+        dialog.set_version("2.1.0")
+        dialog.set_authors(["WinnyKing"])
+        dialog.set_website("https://github.com/WinnyKing57/WinClean")
+        dialog.set_comments(_("Un outil moderne pour analyser et nettoyer votre système Debian."))
+        dialog.set_logo_icon_name("drive-harddisk")
+        dialog.set_license_type(Gtk.License.GPL_3_0)
+
+        dialog.run()
+        dialog.destroy()
     
     def _on_nav_button_clicked(self, button: Gtk.Button, section_id: str, stack: Gtk.Stack):
         """Gère le clic sur un bouton de navigation"""

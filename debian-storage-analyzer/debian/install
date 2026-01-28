@@ -7,6 +7,9 @@ src/helpers/helper.py usr/libexec/debian-storage-analyzer-helper
 # Fichier de règles PolicyKit
 data/polkit/*.policy usr/share/polkit-1/actions/
 
+# Métadonnées AppStream (Discover/Software)
+data/metainfo/*.xml usr/share/metainfo/
+
 # Le lanceur exécutable
-debian/debian-storage-analyzer.desktop usr/share/applications/
+data/applications/*.desktop usr/share/applications/
 debian/debian-storage-analyzer.launcher usr/bin/debian-storage-analyzer
