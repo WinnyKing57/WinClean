@@ -1,0 +1,15 @@
+#!/bin/bash
+# Lanceur pour l'Analyseur de Stockage Debian
+# Force l'utilisation du Python système pour accéder aux packages apt
+
+PROJECT_DIR="$HOME/Depot Github prso/WinClean/WinClean/debian-storage-analyzer"
+
+if [ -d "$PROJECT_DIR" ]; then
+    cd "$PROJECT_DIR"
+    # Utiliser explicitement le Python système, pas celui de conda/venv
+    exec /usr/bin/python3 simple_launcher.py "$@"
+else
+    echo "❌ Erreur: Répertoire du projet non trouvé: $PROJECT_DIR"
+    echo "Veuillez ajuster le chemin dans ~/.local/bin/debian-storage-analyzer"
+    exit 1
+fi

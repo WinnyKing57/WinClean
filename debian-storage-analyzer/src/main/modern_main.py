@@ -40,8 +40,8 @@ class ModernMainWindow(Gtk.ApplicationWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.set_title(_("Analyseur de Stockage Debian 2.0"))
-        self.set_default_size(1000, 750)
+        self.set_title(_("Analyseur de Stockage Debian 3.0"))
+        self.set_default_size(1200, 800)  # Taille plus grande pour les nouvelles colonnes
         self.set_position(Gtk.WindowPosition.CENTER)
         
         # Charger le CSS
@@ -136,7 +136,7 @@ class ModernMainWindow(Gtk.ApplicationWindow):
         title.set_halign(Gtk.Align.START)
         header_hbox.pack_start(title, False, False, 0)
 
-        version_tag = Gtk.Label(label="v2.0.0")
+        version_tag = Gtk.Label(label="v3.0.0")
         version_tag.get_style_context().add_class("version-tag")
         header_hbox.pack_start(version_tag, False, False, 0)
 
@@ -455,8 +455,8 @@ class ModernMainWindow(Gtk.ApplicationWindow):
         scrolled.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         scrolled.set_size_request(-1, 400)
         
-        # TreeView amélioré (sera étendu dans la tâche 2)
-        self.analyzer_liststore = Gtk.ListStore(str, str, bool, str)  # Nom, Taille, IsDir, Type
+        # TreeView amélioré avec intégration explorateur
+        self.analyzer_liststore = Gtk.ListStore(str, str, bool, str, str)  # Nom, Taille, IsDir, Type, Chemin complet
         self.analyzer_treeview = Gtk.TreeView(model=self.analyzer_liststore)
         self.analyzer_treeview.get_style_context().add_class("enhanced-treeview")
 
@@ -464,17 +464,34 @@ class ModernMainWindow(Gtk.ApplicationWindow):
         renderer_text = Gtk.CellRendererText()
         column_name = Gtk.TreeViewColumn(_("Nom"), renderer_text, text=0)
         column_name.set_sort_column_id(0)
+        column_name.set_resizable(True)
+        column_name.set_min_width(200)
         self.analyzer_treeview.append_column(column_name)
 
         renderer_size = Gtk.CellRendererText()
         column_size = Gtk.TreeViewColumn(_("Taille"), renderer_size, text=1)
         column_size.set_sort_column_id(1)
+        column_size.set_resizable(True)
         self.analyzer_treeview.append_column(column_size)
         
         renderer_type = Gtk.CellRendererText()
         column_type = Gtk.TreeViewColumn(_("Type"), renderer_type, text=3)
         column_type.set_sort_column_id(3)
+        column_type.set_resizable(True)
         self.analyzer_treeview.append_column(column_type)
+        
+        # Nouvelle colonne pour le chemin complet
+        renderer_path = Gtk.CellRendererText()
+        renderer_path.set_property("ellipsize", 3)  # Ellipsize au milieu
+        column_path = Gtk.TreeViewColumn(_("Emplacement"), renderer_path, text=4)
+        column_path.set_sort_column_id(4)
+        column_path.set_resizable(True)
+        column_path.set_min_width(300)
+        self.analyzer_treeview.append_column(column_path)
+
+        # Configuration du menu contextuel pour l'explorateur
+        from ui.file_explorer_integration import setup_treeview_context_menu
+        self.context_handler = setup_treeview_context_menu(self.analyzer_treeview, 4)  # Colonne 4 = chemin
 
         scrolled.add(self.analyzer_treeview)
         results_frame.add(scrolled)
@@ -893,15 +910,21 @@ class ModernMainWindow(Gtk.ApplicationWindow):
             categorized_data[file_type_key] = categorized_data.get(file_type_key, 0) + item.size
 
             size_display = self.format_size(item.size)
+            
+            # Ajouter le chemin complet comme 5ème colonne
             self.analyzer_liststore.append([
                 os.path.basename(item.path),
                 size_display,
                 item.is_dir,
-                file_type_display
+                file_type_display,
+                item.path  # Chemin complet pour le menu contextuel
             ])
 
         # Enregistrer dans l'historique
         self.history_manager.record_scan(folder, total_size, categorized_data)
+        
+        # Sauvegarder les résultats pour l'export
+        self.last_analysis_results = results
 
         self.analyzer_spinner.stop()
         self.export_btn.set_sensitive(True)

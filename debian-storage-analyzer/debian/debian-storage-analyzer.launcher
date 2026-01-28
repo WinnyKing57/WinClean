@@ -1,2 +1,18 @@
 #!/bin/sh
-exec /usr/bin/python3 /usr/share/debian-storage-analyzer/main/__main__.py "$@"
+# Lanceur principal pour Debian Storage Analyzer
+# Ce script utilise le lanceur Python amélioré qui vérifie les dépendances
+
+SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+PYTHON_LAUNCHER="$SCRIPT_DIR/../share/debian-storage-analyzer/simple_launcher.py"
+
+# Si installé via package, utiliser le chemin système
+if [ -f "/usr/share/debian-storage-analyzer/simple_launcher.py" ]; then
+    PYTHON_LAUNCHER="/usr/share/debian-storage-analyzer/simple_launcher.py"
+fi
+
+# Fallback vers l'ancien système si le nouveau lanceur n'existe pas
+if [ ! -f "$PYTHON_LAUNCHER" ]; then
+    PYTHON_LAUNCHER="/usr/share/debian-storage-analyzer/main/__main__.py"
+fi
+
+exec /usr/bin/python3 "$PYTHON_LAUNCHER" "$@"

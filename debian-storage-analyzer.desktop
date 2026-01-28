@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Name=Analyseur de Stockage Debian
+Name[en]=Debian Storage Analyzer
+Comment=Analyser et nettoyer l'espace disque
+Comment[en]=Analyze and clean disk space
+Exec=/home/winny/.local/bin/debian-storage-analyzer
+Icon=drive-harddisk
+Terminal=false
+Type=Application
+Categories=System;Utility;GTK;
+StartupWMClass=debian-storage-analyzer
+Keywords=storage;disk;cleaner;analyseur;disque;nettoyage;
+MimeType=inode/directory;

@@ -1,11 +1,16 @@
 [Desktop Entry]
 Version=1.0
-Name=Analyseur de Stockage
-Comment=Analyser et nettoyer l'espace disque
-Exec=/usr/bin/debian-storage-analyzer
+Name=Analyseur de Stockage Debian 3.0
+Name[en]=Debian Storage Analyzer 3.0
+Comment=Analyser et nettoyer l'espace disque avec interface moderne
+Comment[en]=Analyze and clean disk space with modern interface
+Exec=debian-storage-analyzer
 Icon=drive-harddisk
 Terminal=false
 Type=Application
-Categories=System;Utility;GTK;
-StartupWMClass=fr.jules.debianstorageanalyzer
-Keywords=storage;disk;cleaner;analyseur;disque;nettoyage;
+Categories=System;Utility;
+StartupWMClass=debian-storage-analyzer
+Keywords=storage;disk;cleaner;analyseur;disque;nettoyage;explorer;files;
+MimeType=inode/directory;
+StartupNotify=true
+X-GNOME-UsesNotifications=true

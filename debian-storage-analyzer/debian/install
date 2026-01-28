@@ -1,6 +1,9 @@
 # Fichiers principaux de l'application
 src/* usr/share/debian-storage-analyzer/
 
+# Le lanceur Python amélioré
+simple_launcher.py usr/share/debian-storage-analyzer/
+
 # Le script helper exécuté par pkexec
 src/helpers/helper.py usr/libexec/debian-storage-analyzer-helper
 

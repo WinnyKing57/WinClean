@@ -3,17 +3,24 @@
   <id>fr.jules.debianstorageanalyzer.desktop</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0</project_license>
-  <name>Analyseur de Stockage Debian</name>
-  <summary>Analyse et nettoie votre espace disque sur Debian</summary>
+  <name>Analyseur de Stockage Debian 3.0</name>
+  <summary>Interface moderne pour analyser et nettoyer votre espace disque</summary>
   <description>
     <p>
-      L'Analyseur de Stockage Debian est un outil puissant conçu pour vous aider à visualiser l'utilisation de votre disque et à libérer de l'espace.
+      L'Analyseur de Stockage Debian 3.0 est un outil puissant avec interface moderne pour visualiser l'utilisation de votre disque et libérer de l'espace efficacement.
     </p>
+    <p>Nouvelles fonctionnalités v3.0 :</p>
     <ul>
-      <li>Analyse détaillée des dossiers et fichiers par taille.</li>
-      <li>Nettoyage sécurisé du cache APT et des journaux système.</li>
-      <li>Recherche de doublons et de paquets volumineux.</li>
-      <li>Interface moderne et intuitive.</li>
+      <li>Interface moderne avec sidebar et thèmes adaptatifs</li>
+      <li>Clic droit sur fichiers pour ouvrir dans l'explorateur</li>
+      <li>Affichage des emplacements complets des fichiers</li>
+      <li>Graphiques interactifs et tableaux triables</li>
+      <li>Détection de doublons avec hash SHA-256</li>
+      <li>Analyse par catégories (images, vidéos, documents)</li>
+      <li>Surveillance système temps réel avec notifications</li>
+      <li>Historique des analyses et tendances</li>
+      <li>Nettoyage intelligent avec prévisualisation</li>
+      <li>Installation automatique des dépendances</li>
     </ul>
   </description>
   <launchable type="desktop-id">fr.jules.debianstorageanalyzer.desktop</launchable>
@@ -26,8 +33,26 @@
     <category>Utility</category>
   </categories>
   <releases>
+    <release version="3.0.0" date="2025-01-28">
+      <description>
+        <p>Version majeure 3.0 - Interface Moderne Avancée</p>
+        <ul>
+          <li>Interface moderne avec sidebar et thèmes adaptatifs</li>
+          <li>Intégration explorateur de fichiers (clic droit)</li>
+          <li>Affichage des emplacements complets</li>
+          <li>Installation automatique des dépendances</li>
+          <li>Graphiques interactifs et détection de doublons</li>
+          <li>Surveillance temps réel et historique</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.0.0" date="2024-07-31" />
   </releases>
   <content_rating type="oars-1.1" />
   <icon type="stock">drive-harddisk</icon>
+  <screenshots>
+    <screenshot type="default">
+      <caption>Interface principale avec sidebar moderne</caption>
+    </screenshot>
+  </screenshots>
 </component>

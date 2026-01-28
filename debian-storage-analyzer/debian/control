@@ -10,13 +10,19 @@ Package: debian-storage-analyzer
 Architecture: all
 Depends: ${misc:Depends}, python3, python3-gi, gir1.2-gtk-3.0,
          python3-psutil, python3-gi-cairo, python3-matplotlib,
-         python3-pandas, python3-reportlab
+         python3-pandas, python3-reportlab, nautilus | pcmanfm | thunar | dolphin
 Suggests: polkit
-Description: Application d'analyse et de nettoyage de stockage pour Debian
- Une application GTK simple pour visualiser l'utilisation de l'espace disque
- et effectuer des tâches de nettoyage système de base.
+Description: Analyseur de Stockage Debian v3.0 - Interface moderne avancée
+ Application GTK moderne pour analyser et nettoyer l'espace disque avec
+ interface avancée, graphiques interactifs et intégration explorateur.
  .
- L'application permet de :
-  - Analyser un répertoire et visualiser la taille de ses composants.
-  - Nettoyer le cache APT, les fichiers temporaires et les journaux système.
-  - Les opérations sensibles sont effectuées de manière sécurisée via PolicyKit si disponible.
+ Nouvelles fonctionnalités v3.0 :
+  - Interface moderne avec sidebar et thèmes adaptatifs
+  - Graphiques interactifs et tableaux triables
+  - Intégration avec l'explorateur de fichiers (clic droit)
+  - Détection de doublons et analyse par catégories
+  - Surveillance temps réel et historique
+  - Installation automatique des dépendances
+  - Nettoyage intelligent avec prévisualisation
+  .
+ L'application s'intègre parfaitement avec Discover et le menu système.
