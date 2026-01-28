@@ -9,8 +9,8 @@ Homepage: https://github.com/WinnyKing57/WinClean
 Package: debian-storage-analyzer
 Architecture: all
 Depends: ${misc:Depends}, python3, python3-gi, gir1.2-gtk-3.0,
-         python3-psutil, python3-gi-cairo
-Recommends: python3-matplotlib
+         python3-psutil, python3-gi-cairo, python3-matplotlib,
+         python3-pandas, python3-reportlab
 Suggests: polkit
 Description: Application d'analyse et de nettoyage de stockage pour Debian
  Une application GTK simple pour visualiser l'utilisation de l'espace disque

@@ -6,12 +6,15 @@ from collections import namedtuple
 # Utilisation d'un namedtuple pour une structure de données claire et immuable
 FileInfo = namedtuple('FileInfo', ['path', 'size', 'is_dir'])
 
-def get_item_size(path):
+def get_item_size(path, abort_event=None):
     """
     Calcule la taille totale d'un fichier ou d'un répertoire (récursivement).
     Retourne 0 si le chemin n'existe pas ou n'est pas accessible.
     Utilise os.scandir pour de meilleures performances.
     """
+    if abort_event and abort_event.is_set():
+        return 0
+
     total_size = 0
     try:
         # On utilise os.lstat pour ne pas suivre les liens symboliques lors de la mesure initiale
@@ -24,13 +27,15 @@ def get_item_size(path):
         elif os.path.isdir(path):
             # Calcul récursif pour les répertoires
             for entry in os.scandir(path):
+                if abort_event and abort_event.is_set():
+                    break
                 try:
                     if entry.is_symlink():
                         total_size += entry.stat(follow_symlinks=False).st_size
                     elif entry.is_file():
                         total_size += entry.stat().st_size
                     elif entry.is_dir():
-                        total_size += get_item_size(entry.path)
+                        total_size += get_item_size(entry.path, abort_event)
                 except (PermissionError, FileNotFoundError):
                     continue
     except (PermissionError, FileNotFoundError):
@@ -38,7 +43,7 @@ def get_item_size(path):
 
     return total_size
 
-def analyze_directory(path):
+def analyze_directory(path, abort_event=None):
     """
     Analyse le premier niveau d'un répertoire donné, calcule la taille de chaque
     élément (fichier ou dossier) et retourne une liste triée par taille.
@@ -46,6 +51,7 @@ def analyze_directory(path):
 
     Args:
         path (str): Le chemin du répertoire à analyser.
+        abort_event (threading.Event): Événement pour annuler l'analyse.
 
     Returns:
         list: Une liste de namedtuples FileInfo, triée par taille décroissante.
@@ -57,9 +63,11 @@ def analyze_directory(path):
     try:
         with os.scandir(path) as it:
             for entry in it:
+                if abort_event and abort_event.is_set():
+                    break
                 try:
                     full_path = entry.path
-                    size = get_item_size(full_path)
+                    size = get_item_size(full_path, abort_event)
                     is_dir = entry.is_dir()
                     results.append(FileInfo(path=full_path, size=size, is_dir=is_dir))
                 except (PermissionError, FileNotFoundError):
