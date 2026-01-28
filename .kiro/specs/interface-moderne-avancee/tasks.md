@@ -142,22 +142,22 @@ Ce plan d'implémentation transforme le Debian Storage Analyzer existant en une 
   - **Property 23: Configuration Backup and Restore**
   - **Validates: Requirements 7.5**
 
-- [ ] 8. Historique et Base de Données
+- [x] 8. Historique et Base de Données
   - Créer le schéma SQLite pour l'historique
   - Implémenter la persistance des analyses
   - Ajouter la visualisation des tendances historiques
   - Créer le système de journalisation des nettoyages
   - _Requirements: 2.5, 10.1, 10.2, 10.5_
 
-- [ ] 8.1 Write property test for analysis history persistence
+- [x] 8.1 Write property test for analysis history persistence
   - **Property 8: Analysis History Persistence**
   - **Validates: Requirements 2.5, 10.1**
 
-- [ ] 8.2 Write property test for historical data visualization
+- [x] 8.2 Write property test for historical data visualization
   - **Property 31: Historical Data Visualization**
   - **Validates: Requirements 10.2**
 
-- [ ] 8.3 Write property test for cleaning history logging
+- [x] 8.3 Write property test for cleaning history logging
   - **Property 33: Cleaning History Logging**
   - **Validates: Requirements 10.5**
 

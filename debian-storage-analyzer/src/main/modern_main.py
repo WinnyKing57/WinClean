@@ -24,6 +24,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import subprocess
 from analyzer.storage_analyzer import analyze_directory
 from cleaner import system_cleaner, app_cleaner
+from helpers.history_db import HistoryManager
 from ui.modern_sidebar import ModernSidebar
 from ui.theme_manager import ThemeManager
 from ui.tooltip_manager import TooltipManager
@@ -42,6 +43,7 @@ class ModernMainWindow(Gtk.ApplicationWindow):
         self.theme_manager = ThemeManager(self)
         self.tooltip_manager = TooltipManager()
         self.sidebar = ModernSidebar()
+        self.history_manager = HistoryManager()
         
         # Créer l'interface
         self._setup_ui()
@@ -53,6 +55,9 @@ class ModernMainWindow(Gtk.ApplicationWindow):
         
         # Activer la première section
         self.sidebar.set_active_section("dashboard")
+
+        # Charger l'historique initialement
+        self._update_history_views()
 
     def _setup_ui(self):
         """Configure l'interface utilisateur principale"""
@@ -406,20 +411,149 @@ class ModernMainWindow(Gtk.ApplicationWindow):
         listbox.add(row)
 
     def _init_history(self):
-        """Initialise la page d'historique (placeholder)"""
-        page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20)
-        page.set_border_width(30)
+        """Initialise la page d'historique"""
+        self.history_page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20)
+        self.history_page.set_border_width(30)
         
-        title = Gtk.Label(label=_("Historique"))
+        # Header
+        header_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        title = Gtk.Label(label=_("Historique des Opérations"))
         title.get_style_context().add_class("page-title")
         title.set_halign(Gtk.Align.START)
-        page.pack_start(title, False, False, 0)
+        header_box.pack_start(title, False, False, 0)
         
-        placeholder = Gtk.Label(label=_("L'historique sera implémenté dans les prochaines tâches"))
-        placeholder.get_style_context().add_class("placeholder-text")
-        page.pack_start(placeholder, True, True, 0)
+        subtitle = Gtk.Label(label=_("Suivez l'évolution de votre stockage et vos actions de nettoyage"))
+        subtitle.get_style_context().add_class("page-subtitle")
+        subtitle.set_halign(Gtk.Align.START)
+        header_box.pack_start(subtitle, False, False, 0)
+        self.history_page.pack_start(header_box, False, False, 0)
         
-        self.stack.add_named(page, "history")
+        # Notebook pour séparer scans et nettoyages
+        notebook = Gtk.Notebook()
+
+        # Tab 1: Analyses
+        scan_box = self._create_scan_history_view()
+        notebook.append_page(scan_box, Gtk.Label(label=_("Analyses")))
+
+        # Tab 2: Nettoyages
+        clean_box = self._create_cleaning_history_view()
+        notebook.append_page(clean_box, Gtk.Label(label=_("Nettoyages")))
+
+        # Tab 3: Tendances
+        trend_box = self._create_trend_view()
+        notebook.append_page(trend_box, Gtk.Label(label=_("Tendances")))
+
+        self.history_page.pack_start(notebook, True, True, 0)
+
+        # Bouton Actualiser
+        refresh_btn = Gtk.Button(label=_("Actualiser l'historique"))
+        refresh_btn.connect("clicked", lambda w: self._update_history_views())
+        self.history_page.pack_start(refresh_btn, False, False, 0)
+
+        self.stack.add_named(self.history_page, "history")
+
+    def _create_scan_history_view(self):
+        """Crée la vue pour l'historique des analyses"""
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        box.set_border_width(10)
+
+        scrolled = Gtk.ScrolledWindow()
+        scrolled.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+
+        self.scan_history_store = Gtk.ListStore(str, str, str) # Date, Chemin, Taille
+        treeview = Gtk.TreeView(model=self.scan_history_store)
+
+        for i, col_title in enumerate([_("Date"), _("Chemin"), _("Taille Totale")]):
+            renderer = Gtk.CellRendererText()
+            column = Gtk.TreeViewColumn(col_title, renderer, text=i)
+            column.set_sort_column_id(i)
+            treeview.append_column(column)
+
+        scrolled.add(treeview)
+        box.pack_start(scrolled, True, True, 0)
+        return box
+
+    def _create_cleaning_history_view(self):
+        """Crée la vue pour l'historique des nettoyages"""
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        box.set_border_width(10)
+
+        scrolled = Gtk.ScrolledWindow()
+        scrolled.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+
+        self.clean_history_store = Gtk.ListStore(str, str, str) # Date, Action, Libéré
+        treeview = Gtk.TreeView(model=self.clean_history_store)
+
+        for i, col_title in enumerate([_("Date"), _("Action"), _("Espace Libéré")]):
+            renderer = Gtk.CellRendererText()
+            column = Gtk.TreeViewColumn(col_title, renderer, text=i)
+            column.set_sort_column_id(i)
+            treeview.append_column(column)
+
+        scrolled.add(treeview)
+        box.pack_start(scrolled, True, True, 0)
+        return box
+
+    def _create_trend_view(self):
+        """Crée la vue pour les tendances (graphique)"""
+        self.trend_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        self.trend_box.set_border_width(10)
+
+        # Le graphique sera ajouté lors de l'actualisation
+        return self.trend_box
+
+    def _update_history_views(self):
+        """Met à jour les données dans l'UI d'historique"""
+        # Mise à jour des scans
+        self.scan_history_store.clear()
+        scans = self.history_manager.get_scan_history()
+        for s in scans:
+            self.scan_history_store.append([
+                s['timestamp'],
+                s['path'],
+                self.format_size(s['total_size'])
+            ])
+
+        # Mise à jour des nettoyages
+        self.clean_history_store.clear()
+        cleanings = self.history_manager.get_cleaning_history()
+        for c in cleanings:
+            self.clean_history_store.append([
+                c['timestamp'],
+                c['action_type'],
+                self.format_size(c['freed_space'])
+            ])
+
+        # Mise à jour du graphique de tendance
+        self._update_trend_chart()
+
+    def _update_trend_chart(self):
+        """Génère et affiche le graphique de tendance"""
+        for child in self.trend_box.get_children():
+            self.trend_box.remove(child)
+
+        trends = self.history_manager.get_trends()
+        if not trends:
+            label = Gtk.Label(label=_("Pas assez de données pour afficher les tendances."))
+            self.trend_box.pack_start(label, True, True, 0)
+            self.trend_box.show_all()
+            return
+
+        fig, ax = plt.subplots(figsize=(8, 4), dpi=100)
+        fig.patch.set_facecolor('none')
+
+        days = [t['day'] for t in trends]
+        sizes = [t['avg_size'] / (1024*1024*1024) for t in trends] # GB
+
+        ax.plot(days, sizes, marker='o', linestyle='-', color='#3498db')
+        ax.set_ylabel(_("Taille (GB)"))
+        ax.set_title(_("Évolution de l'utilisation du stockage"))
+        plt.xticks(rotation=45)
+        fig.tight_layout()
+
+        canvas = FigureCanvas(fig)
+        self.trend_box.pack_start(canvas, True, True, 0)
+        self.trend_box.show_all()
 
     def _init_settings(self):
         """Initialise la page de paramètres (placeholder)"""
@@ -471,18 +605,30 @@ class ModernMainWindow(Gtk.ApplicationWindow):
     def run_analysis_thread(self, folder):
         """Thread d'analyse"""
         results = analyze_directory(folder)
-        GLib.idle_add(self.on_analysis_finished, results)
+        GLib.idle_add(self.on_analysis_finished, results, folder)
 
-    def on_analysis_finished(self, results):
+    def on_analysis_finished(self, results, folder):
         """Callback fin d'analyse"""
+        total_size = 0
+        categorized_data = {"directory": 0, "file": 0}
+
         for item in results:
-            file_type = "Dossier" if item.is_dir else "Fichier"
+            file_type_key = "directory" if item.is_dir else "file"
+            file_type_display = _("Dossier") if item.is_dir else _("Fichier")
+
+            total_size += item.size
+            categorized_data[file_type_key] = categorized_data.get(file_type_key, 0) + item.size
+
             self.analyzer_liststore.append([
                 os.path.basename(item.path),
                 self.format_size(item.size),
                 item.is_dir,
-                file_type
+                file_type_display
             ])
+
+        # Enregistrer dans l'historique
+        self.history_manager.record_scan(folder, total_size, categorized_data)
+
         self.analyzer_spinner.stop()
 
     def format_size(self, size):
@@ -540,6 +686,7 @@ class ModernMainWindow(Gtk.ApplicationWindow):
                 msg = _("Opération terminée.")
                 if isinstance(result, (int, float)):
                     msg += f" {self.format_size(result)} " + _("libérés.")
+                    self.history_manager.record_cleaning(name, int(result))
                 GLib.idle_add(self.show_info_dialog, name, msg)
             except Exception as e:
                 GLib.idle_add(self.show_info_dialog, name, _("Erreur: ") + str(e))
@@ -559,6 +706,25 @@ class ModernMainWindow(Gtk.ApplicationWindow):
             try:
                 cmd = ["pkexec", helper_path, action]
                 result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+
+                # Essayer d'extraire l'espace libéré du texte (format: "Espace libéré : X.XX MB")
+                # On gère plusieurs langues pour "Espace libéré" si nécessaire, mais ici on reste robuste
+                freed_space = 0
+                import re
+                # Cherche un nombre suivi d'une unité (MB, KB, B, GB)
+                match = re.search(r'(\d+\.?\d*)\s*(MB|KB|B|GB)', result.stdout)
+                if match:
+                    try:
+                        value = float(match.group(1))
+                        unit = match.group(2)
+                        multipliers = {"B": 1, "KB": 1024, "MB": 1024*1024, "GB": 1024*1024*1024}
+                        freed_space = int(value * multipliers.get(unit, 1))
+                    except:
+                        pass
+
+                if freed_space > 0:
+                    self.history_manager.record_cleaning(name, freed_space)
+
                 GLib.idle_add(self.show_info_dialog, name, result.stdout)
             except subprocess.CalledProcessError as e:
                 GLib.idle_add(self.show_info_dialog, name, 
