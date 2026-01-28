@@ -6,6 +6,6 @@ Exec=/usr/bin/debian-storage-analyzer
 Icon=drive-harddisk
 Terminal=false
 Type=Application
-Categories=System;GTK;
+Categories=System;Utility;GTK;
 StartupWMClass=fr.jules.debianstorageanalyzer
 Keywords=storage;disk;cleaner;analyseur;disque;nettoyage;

@@ -13,7 +13,7 @@ from gi.repository import Gtk, Gio, GLib
 
 # Setup i18n
 APP_NAME = "debian-storage-analyzer"
-LOCALE_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'share', 'locale')
+LOCALE_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'locale')
 gettext.bindtextdomain(APP_NAME, LOCALE_DIR)
 gettext.textdomain(APP_NAME)
 _ = gettext.gettext
