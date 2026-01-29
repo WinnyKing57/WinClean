@@ -15,7 +15,9 @@ class ThemeManager:
     def __init__(self, window: Gtk.Window):
         self.window = window
         self.css_provider = Gtk.CssProvider()
+        self.accent_provider = Gtk.CssProvider()
         self.current_theme = None
+        self.accent_color = None
         self.theme_callbacks = []
         
         # Charger les styles CSS v3.0
@@ -26,6 +28,33 @@ class ThemeManager:
         
         # Appliquer le thème initial
         self._apply_current_theme()
+
+    def set_accent_color(self, color_hex: str):
+        """Définit une couleur d'accentuation personnalisée"""
+        self.accent_color = color_hex
+        accent_css = f"""
+        :root {{
+            --accent-primary: {color_hex};
+            --accent-active: {color_hex};
+        }}
+        .sidebar-button-active {{
+            background-color: var(--accent-primary) !important;
+        }}
+        .suggested-action {{
+            background: linear-gradient(135deg, {color_hex}, var(--accent-info)) !important;
+        }}
+        """
+        try:
+            self.accent_provider.load_from_data(accent_css.encode('utf-8'))
+            screen = self.window.get_screen() or Gdk.Screen.get_default()
+            if screen:
+                Gtk.StyleContext.add_provider_for_screen(
+                    screen,
+                    self.accent_provider,
+                    Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 2
+                )
+        except Exception as e:
+            print(f"Erreur lors de l'application de la couleur d'accent: {e}")
     
     def _load_v3_css(self):
         """Charge les styles CSS v3.0 avec variables et thèmes adaptatifs"""
