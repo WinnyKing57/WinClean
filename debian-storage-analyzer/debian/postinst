@@ -39,6 +39,7 @@ case "$1" in
         echo "   • Clic droit sur fichiers pour ouvrir dans l'explorateur"
         echo "   • Graphiques interactifs et détection de doublons"
         echo "   • Surveillance temps réel et historique"
+        echo "   • Gestion automatique des dépendances par le système"
         echo ""
         ;;
         

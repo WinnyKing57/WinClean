@@ -28,8 +28,9 @@ def check_dependencies():
     
     try:
         import matplotlib
+        import numpy
     except ImportError:
-        missing.append("python3-matplotlib")
+        missing.append("python3-matplotlib python3-numpy")
     
     try:
         import pandas
@@ -38,8 +39,9 @@ def check_dependencies():
     
     try:
         import reportlab
+        from PIL import Image
     except ImportError:
-        missing.append("python3-reportlab")
+        missing.append("python3-reportlab python3-pil")
     
     return missing
 
@@ -51,7 +53,7 @@ def install_guide():
     print("sudo apt update")
     print("sudo apt install python3-gi python3-gi-cairo gir1.2-gtk-3.0 \\")
     print("                 python3-psutil python3-matplotlib python3-pandas \\")
-    print("                 python3-reportlab")
+    print("                 python3-reportlab python3-pil python3-numpy")
     print("="*70)
     print("\n✨ Puis relancez l'application depuis le menu ou avec:")
     print("   debian-storage-analyzer")
@@ -126,7 +128,7 @@ def create_simple_gui():
                     "sudo apt update\n"
                     "sudo apt install python3-gi python3-gi-cairo gir1.2-gtk-3.0 \\\n"
                     "                 python3-psutil python3-matplotlib python3-pandas \\\n"
-                    "                 python3-reportlab"
+                    "                 python3-reportlab python3-pil python3-numpy"
                 )
                 
                 scrolled.add(textview)
@@ -203,8 +205,14 @@ def main():
     
     # Si toutes les dépendances sont présentes, lancer l'application
     try:
-        # Ajout du chemin src pour les imports
-        sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'src'))
+        # Gestion du chemin pour les imports (Dév vs Installé)
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        if os.path.exists(os.path.join(base_dir, 'src')):
+            # Mode Développement
+            sys.path.insert(0, os.path.join(base_dir, 'src'))
+        else:
+            # Mode Installé (/usr/share/debian-storage-analyzer/)
+            sys.path.insert(0, base_dir)
         
         from main.modern_main import ModernApplication
         app = ModernApplication()

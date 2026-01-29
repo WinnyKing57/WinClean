@@ -47,7 +47,7 @@ class ModernMainWindow(Gtk.ApplicationWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.set_title(_("Analyseur de Stockage Debian 3.0"))
+        self.set_title(_("Analyseur de Stockage Debian 3.1"))
         self.set_default_size(1200, 800)  # Taille plus grande pour les nouvelles colonnes
         self.set_position(Gtk.WindowPosition.CENTER)
         

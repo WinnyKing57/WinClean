@@ -15,4 +15,4 @@ data/metainfo/*.xml usr/share/metainfo/
 
 # Le lanceur exécutable
 data/applications/*.desktop usr/share/applications/
-debian/debian-storage-analyzer.launcher usr/bin/debian-storage-analyzer
+debian/debian-storage-analyzer usr/bin/

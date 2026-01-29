@@ -20,7 +20,7 @@ class DashboardPage(BasePage):
         title.set_halign(Gtk.Align.START)
         header_hbox.pack_start(title, False, False, 0)
 
-        version_tag = Gtk.Label(label="v3.0.0")
+        version_tag = Gtk.Label(label="v3.1.0")
         version_tag.get_style_context().add_class("version-tag")
         header_hbox.pack_start(version_tag, False, False, 0)
 

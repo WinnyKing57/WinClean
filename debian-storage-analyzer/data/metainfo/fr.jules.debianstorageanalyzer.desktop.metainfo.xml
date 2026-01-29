@@ -3,7 +3,7 @@
   <id>fr.jules.debianstorageanalyzer.desktop</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0</project_license>
-  <name>Analyseur de Stockage Debian 3.0</name>
+  <name>Analyseur de Stockage Debian 3.1</name>
   <summary>Interface moderne pour analyser et nettoyer votre espace disque</summary>
   <description>
     <p>
@@ -33,19 +33,20 @@
     <category>Utility</category>
   </categories>
   <releases>
-    <release version="3.0.0" date="2025-01-28">
+    <release version="3.1.0" date="2025-01-28">
       <description>
-        <p>Version majeure 3.0 - Interface Moderne Avancée</p>
+        <p>Mise à jour 3.1 - Améliorations structurelles et performances</p>
         <ul>
-          <li>Interface moderne avec sidebar et thèmes adaptatifs</li>
-          <li>Intégration explorateur de fichiers (clic droit)</li>
-          <li>Affichage des emplacements complets</li>
-          <li>Installation automatique des dépendances</li>
-          <li>Graphiques interactifs et détection de doublons</li>
-          <li>Surveillance temps réel et historique</li>
+          <li>Architecture modulaire améliorée</li>
+          <li>Nouveau scanner de gros fichiers (>100Mo)</li>
+          <li>Nettoyage Intelligent avec prévisualisation</li>
+          <li>Barre de recherche et filtrage dans l'analyseur</li>
+          <li>Optimisation des performances de scan (itératif)</li>
+          <li>Support des couleurs d'accentuation personnalisées</li>
         </ul>
       </description>
     </release>
+    <release version="3.0.0" date="2025-01-28" />
     <release version="2.0.0" date="2024-07-31" />
   </releases>
   <content_rating type="oars-1.1" />
