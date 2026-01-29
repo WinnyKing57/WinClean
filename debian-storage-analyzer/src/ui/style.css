@@ -267,8 +267,14 @@ window {
 }
 
 .stat-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px var(--shadow-medium);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px var(--shadow-medium);
+    border-color: var(--accent-primary);
+}
+
+.stat-card:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px var(--shadow-light);
 }
 
 .stat-card label {

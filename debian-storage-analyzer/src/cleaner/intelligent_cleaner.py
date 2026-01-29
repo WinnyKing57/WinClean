@@ -481,17 +481,19 @@ class IntelligentCleaner:
             return None
     
     def _get_directory_size(self, directory: str) -> int:
-        """Calcule la taille d'un répertoire"""
+        """Calcule la taille d'un répertoire de manière performante"""
         total_size = 0
         try:
-            for dirpath, dirnames, filenames in os.walk(directory):
-                for filename in filenames:
-                    filepath = os.path.join(dirpath, filename)
+            with os.scandir(directory) as it:
+                for entry in it:
                     try:
-                        total_size += os.path.getsize(filepath)
+                        if entry.is_file(follow_symlinks=False):
+                            total_size += entry.stat().st_size
+                        elif entry.is_dir(follow_symlinks=False):
+                            total_size += self._get_directory_size(entry.path)
                     except (PermissionError, FileNotFoundError, OSError):
                         continue
-        except (PermissionError, FileNotFoundError):
+        except (PermissionError, FileNotFoundError, OSError):
             pass
         
         return total_size

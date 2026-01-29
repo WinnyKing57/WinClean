@@ -1,45 +1,52 @@
 # -*- coding: utf-8 -*-
 
 import os
+import logging
 from collections import namedtuple
+
+logger = logging.getLogger(__name__)
 
 # Utilisation d'un namedtuple pour une structure de données claire et immuable
 FileInfo = namedtuple('FileInfo', ['path', 'size', 'is_dir'])
 
 def get_item_size(path, abort_event=None):
     """
-    Calcule la taille totale d'un fichier ou d'un répertoire (récursivement).
+    Calcule la taille totale d'un fichier ou d'un répertoire (itérativement).
     Retourne 0 si le chemin n'existe pas ou n'est pas accessible.
-    Utilise os.scandir pour de meilleures performances.
+    Utilise os.scandir pour de meilleures performances et évite la récursion profonde.
     """
     if abort_event and abort_event.is_set():
         return 0
 
-    total_size = 0
     try:
-        # On utilise os.lstat pour ne pas suivre les liens symboliques lors de la mesure initiale
         st = os.lstat(path)
-        if os.path.islink(path):
+        if not os.path.isdir(path) or os.path.islink(path):
             return st.st_size
-
-        if os.path.isfile(path):
-            return st.st_size
-        elif os.path.isdir(path):
-            # Calcul récursif pour les répertoires
-            for entry in os.scandir(path):
-                if abort_event and abort_event.is_set():
-                    break
-                try:
-                    if entry.is_symlink():
-                        total_size += entry.stat(follow_symlinks=False).st_size
-                    elif entry.is_file():
-                        total_size += entry.stat().st_size
-                    elif entry.is_dir():
-                        total_size += get_item_size(entry.path, abort_event)
-                except (PermissionError, FileNotFoundError):
-                    continue
-    except (PermissionError, FileNotFoundError):
+    except (PermissionError, FileNotFoundError, OSError):
         return 0
+
+    total_size = 0
+    stack = [path]
+
+    while stack:
+        if abort_event and abort_event.is_set():
+            return 0
+
+        current_path = stack.pop()
+        try:
+            with os.scandir(current_path) as it:
+                for entry in it:
+                    try:
+                        if entry.is_symlink():
+                            total_size += entry.stat(follow_symlinks=False).st_size
+                        elif entry.is_file():
+                            total_size += entry.stat().st_size
+                        elif entry.is_dir():
+                            stack.append(entry.path)
+                    except (PermissionError, FileNotFoundError, OSError):
+                        continue
+        except (PermissionError, FileNotFoundError, OSError):
+            continue
 
     return total_size
 
@@ -56,7 +63,9 @@ def analyze_directory(path, abort_event=None):
     Returns:
         list: Une liste de namedtuples FileInfo, triée par taille décroissante.
     """
+    logger.info(f"Démarrage de l'analyse du répertoire : {path}")
     if not os.path.isdir(path):
+        logger.error(f"Le chemin spécifié n'est pas un répertoire : {path}")
         return []
 
     results = []
