@@ -33,6 +33,13 @@ from cleaner.scheduled_cleaner import ScheduledCleaner
 from ui.modern_sidebar import ModernSidebar
 from ui.theme_manager import ThemeManager
 from ui.tooltip_manager import TooltipManager
+from ui.pages.dashboard import DashboardPage
+from ui.pages.analyzer import AnalyzerPage
+from ui.pages.duplicates import DuplicatesPage
+from ui.pages.packages import PackagesPage
+from ui.pages.cleaner import CleanerPage
+from ui.pages.history import HistoryPage
+from ui.pages.settings import SettingsPage
 
 class ModernMainWindow(Gtk.ApplicationWindow):
     """Interface principale modernisée avec sidebar et thèmes adaptatifs"""
@@ -40,7 +47,7 @@ class ModernMainWindow(Gtk.ApplicationWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.set_title(_("Analyseur de Stockage Debian 3.0"))
+        self.set_title(_("Analyseur de Stockage Debian 3.1"))
         self.set_default_size(1200, 800)  # Taille plus grande pour les nouvelles colonnes
         self.set_position(Gtk.WindowPosition.CENTER)
         
@@ -96,14 +103,19 @@ class ModernMainWindow(Gtk.ApplicationWindow):
         # Zone de contenu principal
         main_box.pack_start(self.stack, True, True, 0)
         
-        # Initialiser les pages
-        self._init_dashboard()
-        self._init_analyzer()
-        self._init_duplicates()
-        self._init_packages()
-        self._init_cleaner()
-        self._init_history()
-        self._init_settings()
+        # Initialiser les pages (v3.1 refactoring)
+        self.pages = {
+            "dashboard": DashboardPage(self),
+            "analyzer": AnalyzerPage(self),
+            "duplicates": DuplicatesPage(self),
+            "packages": PackagesPage(self),
+            "cleaner": CleanerPage(self),
+            "history": HistoryPage(self),
+            "settings": SettingsPage(self)
+        }
+
+        for name, page in self.pages.items():
+            self.stack.add_named(page, name)
 
     def _load_css(self):
         """Charge les styles CSS personnalisés"""
@@ -120,139 +132,6 @@ class ModernMainWindow(Gtk.ApplicationWindow):
             except Exception as e:
                 print(f"Erreur lors du chargement du CSS : {e}")
 
-    def _init_dashboard(self):
-        """Initialise le tableau de bord modernisé"""
-        page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20)
-        page.set_border_width(30)
-        page.get_style_context().add_class("dashboard-page")
-
-        # Header avec titre et description
-        header_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        
-        header_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-
-        title = Gtk.Label(label=_("Tableau de Bord"))
-        title.get_style_context().add_class("page-title")
-        title.set_halign(Gtk.Align.START)
-        header_hbox.pack_start(title, False, False, 0)
-
-        version_tag = Gtk.Label(label="v3.0.0")
-        version_tag.get_style_context().add_class("version-tag")
-        header_hbox.pack_start(version_tag, False, False, 0)
-
-        header_box.pack_start(header_hbox, False, False, 0)
-        
-        subtitle = Gtk.Label(label=_("Vue d'ensemble de l'utilisation du stockage système"))
-        subtitle.get_style_context().add_class("page-subtitle")
-        subtitle.set_halign(Gtk.Align.START)
-        header_box.pack_start(subtitle, False, False, 0)
-        
-        page.pack_start(header_box, False, False, 0)
-
-        # Container pour les statistiques et graphique
-        content_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=30)
-        
-        # Panneau de statistiques
-        stats_frame = Gtk.Frame()
-        stats_frame.get_style_context().add_class("stat-card")
-        stats_frame.set_label(_("Statistiques Système"))
-        stats_frame.set_size_request(320, -1)
-        
-        stats_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=15)
-        stats_box.set_border_width(20)
-        
-        # Statistiques disque
-        usage = psutil.disk_usage('/')
-        
-        # Espace total
-        total_box = self._create_stat_row(_("Espace Total"), self.format_size(usage.total))
-        stats_box.pack_start(total_box, False, False, 0)
-        
-        # Espace utilisé
-        used_box = self._create_stat_row(_("Espace Utilisé"), 
-                                       f"{self.format_size(usage.used)} ({usage.percent:.1f}%)")
-        stats_box.pack_start(used_box, False, False, 0)
-        
-        # Espace libre
-        free_box = self._create_stat_row(_("Espace Libre"), self.format_size(usage.free))
-        stats_box.pack_start(free_box, False, False, 0)
-        
-        # Barre de progression
-        progress_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=5)
-        progress_label = Gtk.Label(label=_("Utilisation"))
-        progress_label.set_halign(Gtk.Align.START)
-        progress_box.pack_start(progress_label, False, False, 0)
-        
-        progress_bar = Gtk.ProgressBar()
-        progress_bar.set_fraction(usage.percent / 100.0)
-        progress_bar.set_show_text(True)
-        progress_bar.set_text(f"{usage.percent:.1f}%")
-        progress_bar.get_style_context().add_class("progress-modern")
-        progress_box.pack_start(progress_bar, False, False, 0)
-        
-        stats_box.pack_start(progress_box, False, False, 0)
-        
-        stats_frame.add(stats_box)
-        content_box.pack_start(stats_frame, False, False, 0)
-        
-        # Graphique en camembert modernisé
-        chart_frame = Gtk.Frame()
-        chart_frame.get_style_context().add_class("stat-card")
-        chart_frame.set_label(_("Répartition de l'Espace"))
-        
-        fig, ax = plt.subplots(figsize=(6, 5), dpi=100)
-        fig.patch.set_facecolor('none')  # Fond transparent
-        
-        labels = [_('Utilisé'), _('Libre')]
-        sizes = [usage.used, usage.free]
-        colors = ['#e74c3c', '#2ecc71']  # Rouge pour utilisé, vert pour libre
-        
-        wedges, texts, autotexts = ax.pie(sizes, labels=labels, autopct='%1.1f%%', 
-                                         startangle=90, colors=colors,
-                                         textprops={'fontsize': 11})
-        
-        # Améliorer l'apparence
-        for autotext in autotexts:
-            autotext.set_color('white')
-            autotext.set_fontweight('bold')
-        
-        ax.axis('equal')
-        
-        canvas = FigureCanvas(fig)
-        canvas.set_size_request(400, 350)
-        chart_frame.add(canvas)
-        
-        content_box.pack_start(chart_frame, True, True, 0)
-        
-        page.pack_start(content_box, True, True, 0)
-        
-        # Actions rapides
-        actions_frame = Gtk.Frame()
-        actions_frame.set_label(_("Actions Rapides"))
-        
-        actions_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=15)
-        actions_box.set_border_width(15)
-        
-        # Bouton analyse rapide
-        analyze_btn = Gtk.Button(label=_("Analyser /home"))
-        analyze_btn.get_style_context().add_class("suggested-action")
-        analyze_btn.connect("clicked", self._on_quick_analyze_home)
-        actions_box.pack_start(analyze_btn, False, False, 0)
-        
-        # Bouton nettoyage rapide
-        clean_btn = Gtk.Button(label=_("Nettoyage Rapide"))
-        clean_btn.connect("clicked", self._on_quick_clean)
-        actions_box.pack_start(clean_btn, False, False, 0)
-        
-        # Bouton actualiser
-        refresh_btn = Gtk.Button(label=_("Actualiser"))
-        refresh_btn.connect("clicked", self._on_refresh_dashboard)
-        actions_box.pack_start(refresh_btn, False, False, 0)
-        
-        actions_frame.add(actions_box)
-        page.pack_start(actions_frame, False, False, 0)
-
-        self.stack.add_named(page, "dashboard")
     
     def _create_stat_row(self, label: str, value: str) -> Gtk.Widget:
         """Crée une ligne de statistique avec label et valeur"""
@@ -270,291 +149,6 @@ class ModernMainWindow(Gtk.ApplicationWindow):
         
         return box
 
-    def _init_packages(self):
-        """Initialise la page d'analyse des paquets"""
-        page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20)
-        page.set_border_width(30)
-
-        title = Gtk.Label(label=_("Analyse des Paquets"))
-        title.get_style_context().add_class("page-title")
-        title.set_halign(Gtk.Align.START)
-        page.pack_start(title, False, False, 0)
-
-        toolbar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=15)
-        refresh_btn = Gtk.Button(label=_("Actualiser la liste"))
-        refresh_btn.get_style_context().add_class("suggested-action")
-        refresh_btn.connect("clicked", self.on_refresh_packages_clicked)
-        toolbar.pack_start(refresh_btn, False, False, 0)
-
-        self.package_spinner = Gtk.Spinner()
-        toolbar.pack_start(self.package_spinner, False, False, 0)
-        page.pack_start(toolbar, False, False, 0)
-
-        scrolled = Gtk.ScrolledWindow()
-        scrolled.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-
-        self.package_liststore = Gtk.ListStore(str, str, str, str) # Nom, Version, Taille, Type
-        self.package_treeview = Gtk.TreeView(model=self.package_liststore)
-
-        for i, col_title in enumerate([_("Nom"), _("Version"), _("Taille"), _("Type")]):
-            renderer = Gtk.CellRendererText()
-            column = Gtk.TreeViewColumn(col_title, renderer, text=i)
-            column.set_sort_column_id(i)
-            self.package_treeview.append_column(column)
-
-        scrolled.add(self.package_treeview)
-        page.pack_start(scrolled, True, True, 0)
-
-        self.stack.add_named(page, "packages")
-
-    def on_refresh_packages_clicked(self, widget):
-        self.package_liststore.clear()
-        self.package_spinner.start()
-        thread = threading.Thread(target=self.run_package_analysis_thread)
-        thread.daemon = True
-        thread.start()
-
-    def run_package_analysis_thread(self):
-        packages = self.package_analyzer.get_installed_packages(['deb', 'flatpak', 'snap'])
-        GLib.idle_add(self.on_package_analysis_finished, packages)
-
-    def on_package_analysis_finished(self, packages):
-        for pkg_type, pkg_list in packages.items():
-            for pkg in pkg_list:
-                self.package_liststore.append([
-                    pkg.name,
-                    pkg.version,
-                    self.format_size(pkg.size) if pkg.size > 0 else _("Inconnue"),
-                    pkg.package_type.upper()
-                ])
-        self.package_spinner.stop()
-
-    def _init_duplicates(self):
-        """Initialise la page de recherche de doublons"""
-        page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20)
-        page.set_border_width(30)
-
-        title = Gtk.Label(label=_("Recherche de Doublons"))
-        title.get_style_context().add_class("page-title")
-        title.set_halign(Gtk.Align.START)
-        page.pack_start(title, False, False, 0)
-
-        toolbar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=15)
-        select_btn = Gtk.Button(label=_("Scanner un dossier"))
-        select_btn.get_style_context().add_class("suggested-action")
-        select_btn.connect("clicked", self.on_select_duplicate_folder_clicked)
-        toolbar.pack_start(select_btn, False, False, 0)
-
-        self.duplicate_spinner = Gtk.Spinner()
-        toolbar.pack_start(self.duplicate_spinner, False, False, 0)
-        page.pack_start(toolbar, False, False, 0)
-
-        scrolled = Gtk.ScrolledWindow()
-        scrolled.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-
-        self.duplicate_liststore = Gtk.ListStore(str, str, str) # Hash, Taille, Chemins (concat)
-        self.duplicate_treeview = Gtk.TreeView(model=self.duplicate_liststore)
-
-        for i, col_title in enumerate([_("Hash (ID)"), _("Taille"), _("Fichiers")]):
-            renderer = Gtk.CellRendererText()
-            column = Gtk.TreeViewColumn(col_title, renderer, text=i)
-            column.set_sort_column_id(i)
-            self.duplicate_treeview.append_column(column)
-
-        scrolled.add(self.duplicate_treeview)
-        page.pack_start(scrolled, True, True, 0)
-
-        self.stack.add_named(page, "duplicates")
-
-    def on_select_duplicate_folder_clicked(self, widget):
-        dialog = Gtk.FileChooserDialog(
-            title=_("Choisir un dossier pour les doublons"),
-            parent=self,
-            action=Gtk.FileChooserAction.SELECT_FOLDER,
-        )
-        dialog.add_buttons(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
-        response = dialog.run()
-        if response == Gtk.ResponseType.OK:
-            folder = dialog.get_filename()
-            self.start_duplicate_scan(folder)
-        dialog.destroy()
-
-    def start_duplicate_scan(self, folder):
-        self.duplicate_liststore.clear()
-        self.duplicate_spinner.start()
-        thread = threading.Thread(target=self.run_duplicate_thread, args=(folder,))
-        thread.daemon = True
-        thread.start()
-
-    def run_duplicate_thread(self, folder):
-        duplicates = self.duplicate_detector.find_duplicates(folder)
-        GLib.idle_add(self.on_duplicate_finished, duplicates)
-
-    def on_duplicate_finished(self, duplicates):
-        for hash_val, group in duplicates.items():
-            self.duplicate_liststore.append([
-                hash_val[:12],
-                self.format_size(group.file_size),
-                ", ".join([os.path.basename(p) for p in group.file_paths])
-            ])
-        self.duplicate_spinner.stop()
-
-    def _init_analyzer(self):
-        """Initialise la page d'analyse modernisée"""
-        page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20)
-        page.set_border_width(30)
-
-        # Header
-        header_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        
-        title = Gtk.Label(label=_("Analyse de Stockage"))
-        title.get_style_context().add_class("page-title")
-        title.set_halign(Gtk.Align.START)
-        header_box.pack_start(title, False, False, 0)
-        
-        subtitle = Gtk.Label(label=_("Analyser l'utilisation de l'espace disque par dossier"))
-        subtitle.get_style_context().add_class("page-subtitle")
-        subtitle.set_halign(Gtk.Align.START)
-        header_box.pack_start(subtitle, False, False, 0)
-        
-        page.pack_start(header_box, False, False, 0)
-
-        # Toolbar d'analyse
-        toolbar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=15)
-        
-        select_button = Gtk.Button(label=_("Choisir un Dossier"))
-        select_button.get_style_context().add_class("suggested-action")
-        select_button.connect("clicked", self.on_select_folder_clicked)
-        toolbar.pack_start(select_button, False, False, 0)
-        
-        self.analyzer_spinner = Gtk.Spinner()
-        toolbar.pack_start(self.analyzer_spinner, False, False, 0)
-        
-        self.stop_btn = Gtk.Button.new_from_icon_name("process-stop", Gtk.IconSize.BUTTON)
-        self.stop_btn.set_sensitive(False)
-        self.stop_btn.connect("clicked", self.on_stop_analysis_clicked)
-        toolbar.pack_start(self.stop_btn, False, False, 0)
-
-        # Spacer
-        spacer = Gtk.Box()
-        toolbar.pack_start(spacer, True, True, 0)
-        
-        # Boutons d'action
-        self.export_btn = Gtk.Button(label=_("Exporter"))
-        self.export_btn.set_sensitive(False)  # Activé après analyse
-        self.export_btn.connect("clicked", self.on_export_clicked)
-        toolbar.pack_start(self.export_btn, False, False, 0)
-        
-        page.pack_start(toolbar, False, False, 0)
-
-        # Zone de résultats
-        results_frame = Gtk.Frame()
-        results_frame.set_label(_("Résultats d'Analyse"))
-        
-        scrolled = Gtk.ScrolledWindow()
-        scrolled.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-        scrolled.set_size_request(-1, 400)
-        
-        # TreeView amélioré avec intégration explorateur
-        self.analyzer_liststore = Gtk.ListStore(str, str, bool, str, str)  # Nom, Taille, IsDir, Type, Chemin complet
-        self.analyzer_treeview = Gtk.TreeView(model=self.analyzer_liststore)
-        self.analyzer_treeview.get_style_context().add_class("enhanced-treeview")
-
-        # Colonnes
-        renderer_text = Gtk.CellRendererText()
-        column_name = Gtk.TreeViewColumn(_("Nom"), renderer_text, text=0)
-        column_name.set_sort_column_id(0)
-        column_name.set_resizable(True)
-        column_name.set_min_width(200)
-        self.analyzer_treeview.append_column(column_name)
-
-        renderer_size = Gtk.CellRendererText()
-        column_size = Gtk.TreeViewColumn(_("Taille"), renderer_size, text=1)
-        column_size.set_sort_column_id(1)
-        column_size.set_resizable(True)
-        self.analyzer_treeview.append_column(column_size)
-        
-        renderer_type = Gtk.CellRendererText()
-        column_type = Gtk.TreeViewColumn(_("Type"), renderer_type, text=3)
-        column_type.set_sort_column_id(3)
-        column_type.set_resizable(True)
-        self.analyzer_treeview.append_column(column_type)
-        
-        # Nouvelle colonne pour le chemin complet
-        renderer_path = Gtk.CellRendererText()
-        renderer_path.set_property("ellipsize", 3)  # Ellipsize au milieu
-        column_path = Gtk.TreeViewColumn(_("Emplacement"), renderer_path, text=4)
-        column_path.set_sort_column_id(4)
-        column_path.set_resizable(True)
-        column_path.set_min_width(300)
-        self.analyzer_treeview.append_column(column_path)
-
-        # Configuration du menu contextuel pour l'explorateur
-        from ui.file_explorer_integration import setup_treeview_context_menu
-        self.context_handler = setup_treeview_context_menu(self.analyzer_treeview, 4)  # Colonne 4 = chemin
-
-        scrolled.add(self.analyzer_treeview)
-        results_frame.add(scrolled)
-        page.pack_start(results_frame, True, True, 0)
-
-        self.stack.add_named(page, "analyzer")
-
-    def _init_cleaner(self):
-        """Initialise la page de nettoyage modernisée"""
-        page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20)
-        page.set_border_width(30)
-
-        # Header
-        header_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        
-        title = Gtk.Label(label=_("Nettoyage Système"))
-        title.get_style_context().add_class("page-title")
-        title.set_halign(Gtk.Align.START)
-        header_box.pack_start(title, False, False, 0)
-        
-        subtitle = Gtk.Label(label=_("Nettoyer les fichiers temporaires et caches système"))
-        subtitle.get_style_context().add_class("page-subtitle")
-        subtitle.set_halign(Gtk.Align.START)
-        header_box.pack_start(subtitle, False, False, 0)
-        
-        page.pack_start(header_box, False, False, 0)
-
-        # Options de nettoyage
-        cleaners_frame = Gtk.Frame()
-        cleaners_frame.set_label(_("Options de Nettoyage"))
-        
-        cleaners_list = Gtk.ListBox()
-        cleaners_list.set_selection_mode(Gtk.SelectionMode.NONE)
-        
-        # Utiliser la fonction existante mais avec un style modernisé
-        self._add_modern_cleaner_row(cleaners_list, _("Cache APT"), 
-                                   _("Supprime les paquets téléchargés (.deb)"), 
-                                   self.on_clean_apt_clicked, "clean_apt")
-        
-        self._add_modern_cleaner_row(cleaners_list, _("Dépendances inutiles"), 
-                                   _("Supprime les paquets orphelins (autoremove)"), 
-                                   self.on_autoremove_clicked, "clean_autoremove")
-        
-        self._add_modern_cleaner_row(cleaners_list, _("Fichiers Temporaires"), 
-                                   _("Nettoie /tmp et /var/tmp (> 7 jours)"), 
-                                   self.on_clean_temp_clicked, "clean_temp")
-        
-        self._add_modern_cleaner_row(cleaners_list, _("Journaux Système"), 
-                                   _("Réduit la taille des logs journald"), 
-                                   self.on_clean_logs_clicked, "clean_logs")
-        
-        self._add_modern_cleaner_row(cleaners_list, _("Firefox Cache"), 
-                                   _("Nettoie le cache de Firefox"), 
-                                   self.on_clean_firefox_clicked, "clean_firefox")
-        
-        self._add_modern_cleaner_row(cleaners_list, _("Flatpak Cache"), 
-                                   _("Nettoie le cache des applications Flatpak"), 
-                                   self.on_clean_flatpak_clicked, "clean_flatpak")
-        
-        cleaners_frame.add(cleaners_list)
-        page.pack_start(cleaners_frame, True, True, 0)
-
-        self.stack.add_named(page, "cleaner")
     
     def _add_modern_cleaner_row(self, listbox: Gtk.ListBox, name: str, description: str, 
                               callback, tooltip_key: str):
@@ -604,48 +198,6 @@ class ModernMainWindow(Gtk.ApplicationWindow):
         row.add(hbox)
         listbox.add(row)
 
-    def _init_history(self):
-        """Initialise la page d'historique"""
-        self.history_page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20)
-        self.history_page.set_border_width(30)
-        
-        # Header
-        header_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        title = Gtk.Label(label=_("Historique des Opérations"))
-        title.get_style_context().add_class("page-title")
-        title.set_halign(Gtk.Align.START)
-        header_box.pack_start(title, False, False, 0)
-        
-        subtitle = Gtk.Label(label=_("Suivez l'évolution de votre stockage et vos actions de nettoyage"))
-        subtitle.get_style_context().add_class("page-subtitle")
-        subtitle.set_halign(Gtk.Align.START)
-        header_box.pack_start(subtitle, False, False, 0)
-        self.history_page.pack_start(header_box, False, False, 0)
-        
-        # Notebook pour séparer scans et nettoyages
-        notebook = Gtk.Notebook()
-
-        # Tab 1: Analyses
-        scan_box = self._create_scan_history_view()
-        notebook.append_page(scan_box, Gtk.Label(label=_("Analyses")))
-
-        # Tab 2: Nettoyages
-        clean_box = self._create_cleaning_history_view()
-        notebook.append_page(clean_box, Gtk.Label(label=_("Nettoyages")))
-
-        # Tab 3: Tendances
-        trend_box = self._create_trend_view()
-        notebook.append_page(trend_box, Gtk.Label(label=_("Tendances")))
-
-        self.history_page.pack_start(notebook, True, True, 0)
-
-        # Bouton Actualiser
-        refresh_btn = Gtk.Button(label=_("Actualiser l'historique"))
-        refresh_btn.connect("clicked", lambda w: self._update_history_views())
-        self.history_page.pack_start(refresh_btn, False, False, 0)
-
-        self.stack.add_named(self.history_page, "history")
-
     def _create_scan_history_view(self):
         """Crée la vue pour l'historique des analyses"""
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
@@ -687,6 +239,62 @@ class ModernMainWindow(Gtk.ApplicationWindow):
         scrolled.add(treeview)
         box.pack_start(scrolled, True, True, 0)
         return box
+
+    def on_refresh_packages_clicked(self, widget):
+        self.package_liststore.clear()
+        self.package_spinner.start()
+        thread = threading.Thread(target=self.run_package_analysis_thread)
+        thread.daemon = True
+        thread.start()
+
+    def run_package_analysis_thread(self):
+        packages = self.package_analyzer.get_installed_packages(['deb', 'flatpak', 'snap'])
+        GLib.idle_add(self.on_package_analysis_finished, packages)
+
+    def on_package_analysis_finished(self, packages):
+        for pkg_type, pkg_list in packages.items():
+            for pkg in pkg_list:
+                self.package_liststore.append([
+                    pkg.name,
+                    pkg.version,
+                    self.format_size(pkg.size) if pkg.size > 0 else _("Inconnue"),
+                    pkg.package_type.upper()
+                ])
+        self.package_spinner.stop()
+
+    def on_select_duplicate_folder_clicked(self, widget):
+        dialog = Gtk.FileChooserDialog(
+            title=_("Choisir un dossier pour les doublons"),
+            parent=self,
+            action=Gtk.FileChooserAction.SELECT_FOLDER,
+        )
+        dialog.add_buttons(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
+        response = dialog.run()
+        if response == Gtk.ResponseType.OK:
+            folder = dialog.get_filename()
+            self.start_duplicate_scan(folder)
+        dialog.destroy()
+
+    def start_duplicate_scan(self, folder):
+        self.duplicate_liststore.clear()
+        self.duplicate_spinner.start()
+        thread = threading.Thread(target=self.run_duplicate_thread, args=(folder,))
+        thread.daemon = True
+        thread.start()
+
+    def run_duplicate_thread(self, folder):
+        duplicates = self.duplicate_detector.find_duplicates(folder)
+        GLib.idle_add(self.on_duplicate_finished, duplicates)
+
+    def on_duplicate_finished(self, duplicates):
+        for hash_val, group in duplicates.items():
+            self.duplicate_liststore.append([
+                False, # Checkbox
+                hash_val[:12],
+                self.format_size(group.file_size),
+                ", ".join([os.path.basename(p) for p in group.file_paths])
+            ])
+        self.duplicate_spinner.stop()
 
     def _create_trend_view(self):
         """Crée la vue pour les tendances (graphique)"""
@@ -749,74 +357,6 @@ class ModernMainWindow(Gtk.ApplicationWindow):
         self.trend_box.pack_start(canvas, True, True, 0)
         self.trend_box.show_all()
 
-    def _init_settings(self):
-        """Initialise la page de paramètres"""
-        page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20)
-        page.set_border_width(30)
-        
-        title = Gtk.Label(label=_("Paramètres"))
-        title.get_style_context().add_class("page-title")
-        title.set_halign(Gtk.Align.START)
-        page.pack_start(title, False, False, 0)
-        
-        scrolled = Gtk.ScrolledWindow()
-        scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-
-        settings_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=15)
-
-        # Thème
-        theme_frame = Gtk.Frame(label=_("Apparence"))
-        theme_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-        theme_box.set_border_width(10)
-        theme_box.pack_start(Gtk.Label(label=_("Thème")), False, False, 0)
-
-        theme_combo = Gtk.ComboBoxText()
-        theme_combo.append("auto", _("Automatique"))
-        theme_combo.append("light", _("Clair"))
-        theme_combo.append("dark", _("Sombre"))
-
-        current_config = self.config_manager.get_configuration()
-        theme_combo.set_active_id(current_config.ui.theme)
-        theme_combo.connect("changed", self.on_theme_changed)
-
-        theme_box.pack_end(theme_combo, False, False, 0)
-        theme_frame.add(theme_box)
-        settings_box.pack_start(theme_frame, False, False, 0)
-
-        # Analyse
-        analysis_frame = Gtk.Frame(label=_("Analyse"))
-        analysis_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        analysis_box.set_border_width(10)
-
-        hidden_switch = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-        hidden_switch.pack_start(Gtk.Label(label=_("Inclure les fichiers cachés")), False, False, 0)
-        self.hidden_sw = Gtk.Switch()
-        self.hidden_sw.set_active(current_config.analysis.include_hidden_files)
-        self.hidden_sw.connect("state-set", self.on_analysis_setting_changed, "include_hidden_files")
-        hidden_switch.pack_end(self.hidden_sw, False, False, 0)
-        analysis_box.pack_start(hidden_switch, False, False, 0)
-
-        analysis_frame.add(analysis_box)
-        settings_box.pack_start(analysis_frame, False, False, 0)
-
-        # Planification
-        planning_frame = Gtk.Frame(label=_("Nettoyage Automatique"))
-        planning_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        planning_box.set_border_width(10)
-
-        planning_box.pack_start(Gtk.Label(label=_("Activer les tâches systemd/cron par défaut")), False, False, 0)
-
-        default_plan_btn = Gtk.Button(label=_("Initialiser les planifications par défaut"))
-        default_plan_btn.connect("clicked", self.on_init_default_schedules)
-        planning_box.pack_start(default_plan_btn, False, False, 0)
-
-        planning_frame.add(planning_box)
-        settings_box.pack_start(planning_frame, False, False, 0)
-
-        scrolled.add(settings_box)
-        page.pack_start(scrolled, True, True, 0)
-        
-        self.stack.add_named(page, "settings")
 
     def on_theme_changed(self, combo):
         theme_id = combo.get_active_id()
@@ -973,7 +513,10 @@ class ModernMainWindow(Gtk.ApplicationWindow):
         """Actualise le dashboard"""
         # Recréer la page dashboard avec les nouvelles données
         self.stack.remove(self.stack.get_child_by_name("dashboard"))
-        self._init_dashboard()
+        self.pages["dashboard"] = DashboardPage(self)
+        self.stack.add_named(self.pages["dashboard"], "dashboard")
+        self.stack.show_all()
+        self.stack.set_visible_child_name("dashboard")
 
     # Méthodes de nettoyage réutilisées
     def run_clean_task(self, name, func):

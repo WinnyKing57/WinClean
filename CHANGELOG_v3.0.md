@@ -24,10 +24,10 @@
 - **Police monospace** pour les chemins : Meilleure lisibilité
 
 #### Installation Automatique
-- **Dépendances auto-installées** : Plus besoin d'installer manuellement les dépendances avec le .deb
-- **Script postinst amélioré** : Installation automatique de python3-gi, psutil, matplotlib, etc.
-- **Messages informatifs** : Guide l'utilisateur pendant l'installation
-- **Compatibilité environnements** : Fonctionne même dans conda/venv
+- **Gestion des dépendances** : Les dépendances sont maintenant déclarées proprement dans le paquet .deb pour une installation automatique par APT/Discover.
+- **Installation standard** : Utilisation conforme des standards Debian (Depends dans le fichier control).
+- **Messages informatifs** : Guide l'utilisateur pendant l'installation.
+- **Compatibilité environnements** : Fonctionne même dans conda/venv en utilisant le Python système.
 
 ### 🎨 Système de Thèmes v3.0
 

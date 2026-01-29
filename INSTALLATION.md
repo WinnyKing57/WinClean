@@ -1,6 +1,6 @@
-# Installation de l'Analyseur de Stockage Debian v3.0
+# Installation de l'Analyseur de Stockage Debian v3.1
 
-## 🆕 Nouveautés Version 3.0
+## 🆕 Nouveautés Version 3.1
 
 ### Interface Moderne Avancée
 - **Sidebar moderne** avec navigation fluide et thèmes adaptatifs
