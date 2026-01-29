@@ -1,6 +1,6 @@
-e5ab98382d4f4360b319ed13c902096d  usr/bin/debian-storage-analyzer-launcher
+b1aeef59507a7403f3bb2579424fe001  usr/bin/debian-storage-analyzer
 5d1e68188fa51396cffe2d8c2619444c  usr/libexec/debian-storage-analyzer-helper/helper.py
-13b3034cb493982f15cbf0d9ca6e697d  usr/share/applications/fr.jules.debianstorageanalyzer.desktop
+3893ef67c25753be05a0eb24bd705603  usr/share/applications/fr.jules.debianstorageanalyzer.desktop
 ee86032060d59b836fd8c0aaefdad7a0  usr/share/debian-storage-analyzer/__init__.py
 09db48a147ffb1ec07780200f6b5a899  usr/share/debian-storage-analyzer/analyzer/__init__.py
 e59f2df8274b0f2f3e541c0843ecd2db  usr/share/debian-storage-analyzer/analyzer/duplicate_detector.py
@@ -17,7 +17,7 @@ d41d8cd98f00b204e9800998ecf8427e  usr/share/debian-storage-analyzer/cleaner/__in
 9dd81fe967fdb282250a8e109f0dbbb6  usr/share/debian-storage-analyzer/cleaner/system_extensions.py
 dfe83f0bc6a3b0659ce25fb4b5b3540b  usr/share/debian-storage-analyzer/config/__init__.py
 30d6fd21c2697c65aa314e0f492114e4  usr/share/debian-storage-analyzer/config/configuration_integration.py
-7c644ae4947189b26874fdef9f959aae  usr/share/debian-storage-analyzer/config/configuration_manager.py
+eea94c38659c1c844d1b9a530ec53497  usr/share/debian-storage-analyzer/config/configuration_manager.py
 8026f907e0e5caef98e446c37f10724b  usr/share/debian-storage-analyzer/config/configuration_ui.py
 d41d8cd98f00b204e9800998ecf8427e  usr/share/debian-storage-analyzer/helpers/__init__.py
 5d1e68188fa51396cffe2d8c2619444c  usr/share/debian-storage-analyzer/helpers/helper.py
@@ -25,15 +25,15 @@ d5b1e6edbefa20f28d7a97e0ccec66d3  usr/share/debian-storage-analyzer/helpers/hist
 365d3f2cee9d3eed75ae8105496883c6  usr/share/debian-storage-analyzer/helpers/report_generator.py
 d41d8cd98f00b204e9800998ecf8427e  usr/share/debian-storage-analyzer/main/__init__.py
 a08d4221924ca9be11d052f7ab9fd7df  usr/share/debian-storage-analyzer/main/__main__.py
-2c1184bc1394ba17d70daa3477f2fdfd  usr/share/debian-storage-analyzer/main/modern_main.py
+92a077da07000dc39ec53fcc8b8b53df  usr/share/debian-storage-analyzer/main/modern_main.py
 c29b744fff9ff39d939f3cf7d70bcdd3  usr/share/debian-storage-analyzer/main/monitoring_integration.py
 429dd2d720eb23b42fd51c6976f83ea9  usr/share/debian-storage-analyzer/main/realtime_monitor.py
 b295c573218efe3566f0f1d6749a8400  usr/share/debian-storage-analyzer/simple_launcher.py
 e028b59d598f5690abfc9d55b88739dc  usr/share/debian-storage-analyzer/ui/__init__.py
-84695c951bf99393ec2d4c8a750c44cb  usr/share/debian-storage-analyzer/ui/enhanced_treeview.py
+6dbf60b4378070535ad07304363db4d0  usr/share/debian-storage-analyzer/ui/enhanced_treeview.py
 d81c35347163c95c8a60afc23df15354  usr/share/debian-storage-analyzer/ui/file_explorer_integration.py
 65c857b2ecd9daf6759ce93aec08022a  usr/share/debian-storage-analyzer/ui/interactive_charts.py
-87a949801b9f4f68d364ceaccbcfaff8  usr/share/debian-storage-analyzer/ui/modern_sidebar.py
+034f7b01f7f36645488a6f6056451ab6  usr/share/debian-storage-analyzer/ui/modern_sidebar.py
 d41d8cd98f00b204e9800998ecf8427e  usr/share/debian-storage-analyzer/ui/pages/__init__.py
 a48a10b00c41d7ec282a8a28b97da019  usr/share/debian-storage-analyzer/ui/pages/analyzer.py
 26cb8e878e0190af801e2f6b2f890b4b  usr/share/debian-storage-analyzer/ui/pages/base_page.py
@@ -48,5 +48,5 @@ e30afa3668c709784ec94a08d77b0691  usr/share/debian-storage-analyzer/ui/theme_man
 ffb00b89b3ad40419bef6f84a08574b6  usr/share/debian-storage-analyzer/ui/tooltip_manager.py
 acbce1d5e67a4ca51bb5704ca9236927  usr/share/debian-storage-analyzer/ui/visual_feedback.py
 03a9b722760f6642429018f0c38deb61  usr/share/doc/debian-storage-analyzer/changelog.gz
-c73f104327534a862429cce3cb62576a  usr/share/metainfo/fr.jules.debianstorageanalyzer.desktop.metainfo.xml
+dbced8c0273fef4476688dbd5f464be1  usr/share/metainfo/fr.jules.debianstorageanalyzer.desktop.metainfo.xml
 5226c8e5e0341a2b53b04d1da9f68538  usr/share/polkit-1/actions/fr.jules.debianstorageanalyzer.policy

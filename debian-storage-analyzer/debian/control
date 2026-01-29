@@ -1,7 +1,7 @@
 Source: debian-storage-analyzer
 Section: utils
 Priority: optional
-Maintainer: WinnyKing <winnyking.site@gmail.com>
+Maintainer: Jules <jules@debian>
 Build-Depends: debhelper-compat (= 13)
 Standards-Version: 4.6.2
 Homepage: https://github.com/WinnyKing57/WinClean

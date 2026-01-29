@@ -2,11 +2,12 @@ Format: 1.8
 Date: Tue, 28 Jan 2025 18:00:00 +0000
 Source: debian-storage-analyzer
 Binary: debian-storage-analyzer
+Built-For-Profiles: noudeb
 Architecture: all
 Version: 3.1.0
 Distribution: unstable
 Urgency: medium
-Maintainer: WinnyKing <winnyking.site@gmail.com>
+Maintainer: Jules <jules@debian>
 Changed-By: Jules <jules@debian>
 Description:
  debian-storage-analyzer - Analyseur de Stockage Debian v3.1 - Interface moderne avancée
@@ -22,11 +23,11 @@ Changes:
    * Optimisation : Scan des dossiers itératif (plus de récursion) pour plus de stabilité.
    - Correction du lanceur pour une meilleure détection des dépendances.
 Checksums-Sha1:
- 9ae40a55bd7f2389702f4f3a4650b039a12e675f 75456 debian-storage-analyzer_3.1.0_all.deb
- f4f7c887d7b5fecef9e137ca9a8900855d4ff95e 5211 debian-storage-analyzer_3.1.0_amd64.buildinfo
+ 63a677bf9c537353bbefe161f707e20d2e4fcc15 76544 debian-storage-analyzer_3.1.0_all.deb
+ 995c11c1e3f3d0d85050c825167db384461c6eb5 6458 debian-storage-analyzer_3.1.0_amd64.buildinfo
 Checksums-Sha256:
- feb2086031e315a19f77cbe39dae133c056345795c76e0c5c3dad42bf1573990 75456 debian-storage-analyzer_3.1.0_all.deb
- 9853fb9095e610f51850038db33ee0a51c8c57cdeabc8e3108d0ec2476f4dbb0 5211 debian-storage-analyzer_3.1.0_amd64.buildinfo
+ 92149ef40c5181971ccd6b950acb7d5e9181942233dfaf4c095ff31ce44570f7 76544 debian-storage-analyzer_3.1.0_all.deb
+ cbcf2295f46af7973bdb22009f14bb14a7650b53fcb24d1b3bf2872fde9e13e1 6458 debian-storage-analyzer_3.1.0_amd64.buildinfo
 Files:
- a803dfa3c2040b101a1e13d51c6faf35 75456 utils optional debian-storage-analyzer_3.1.0_all.deb
- f2c21c7bcc0b9bb9b5bf327d13ee9f98 5211 utils optional debian-storage-analyzer_3.1.0_amd64.buildinfo
+ 54383e6b4ceb22167bb208110c5acd93 76544 utils optional debian-storage-analyzer_3.1.0_all.deb
+ 7a9f9894052e5aaebf9388002eb6bfc3 6458 utils optional debian-storage-analyzer_3.1.0_amd64.buildinfo

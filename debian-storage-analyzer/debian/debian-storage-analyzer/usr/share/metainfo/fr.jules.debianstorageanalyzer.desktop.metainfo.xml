@@ -25,8 +25,8 @@
   </description>
   <launchable type="desktop-id">fr.jules.debianstorageanalyzer.desktop</launchable>
   <url type="homepage">https://github.com/WinnyKing57/WinClean</url>
-  <developer>
-    <name>WinnyKing</name>
+  <developer id="fr.jules">
+    <name>Jules</name>
   </developer>
   <categories>
     <category>System</category>
@@ -51,9 +51,4 @@
   </releases>
   <content_rating type="oars-1.1" />
   <icon type="stock">drive-harddisk</icon>
-  <screenshots>
-    <screenshot type="default">
-      <caption>Interface principale avec sidebar moderne</caption>
-    </screenshot>
-  </screenshots>
 </component>

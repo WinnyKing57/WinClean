@@ -40,6 +40,10 @@ class TestDuplicateDetector:
     @given(st.text(min_size=1, max_size=1000))
     def test_identical_content_creates_duplicates(self, content):
         """Property: Des fichiers avec contenu identique sont détectés comme doublons"""
+        # Nettoyer le répertoire pour chaque exemple Hypothesis
+        shutil.rmtree(self.temp_dir)
+        os.makedirs(self.temp_dir)
+
         # Créer deux fichiers avec le même contenu
         file1 = os.path.join(self.temp_dir, "file1.txt")
         file2 = os.path.join(self.temp_dir, "file2.txt")
@@ -61,6 +65,10 @@ class TestDuplicateDetector:
         """Property: Des fichiers avec contenu différent ne sont pas des doublons"""
         assume(content1 != content2)
         
+        # Nettoyer le répertoire pour chaque exemple Hypothesis
+        shutil.rmtree(self.temp_dir)
+        os.makedirs(self.temp_dir)
+
         file1 = os.path.join(self.temp_dir, "file1.txt")
         file2 = os.path.join(self.temp_dir, "file2.txt")
         
@@ -75,6 +83,10 @@ class TestDuplicateDetector:
     @given(st.integers(min_value=3, max_value=10))
     def test_multiple_identical_files(self, num_files):
         """Property: Plusieurs fichiers identiques forment un groupe de doublons"""
+        # Nettoyer le répertoire pour chaque exemple Hypothesis
+        shutil.rmtree(self.temp_dir)
+        os.makedirs(self.temp_dir)
+
         content = "identical content for all files"
         file_paths = []
         
@@ -101,6 +113,10 @@ class TestDuplicateDetector:
     @given(st.integers(min_value=1, max_value=1000))
     def test_min_size_filter(self, min_size):
         """Property: Le filtre de taille minimale fonctionne correctement"""
+        # Nettoyer le répertoire pour chaque exemple Hypothesis
+        shutil.rmtree(self.temp_dir)
+        os.makedirs(self.temp_dir)
+
         # Créer un petit fichier
         small_content = "x" * (min_size - 1) if min_size > 1 else ""
         small_file1 = os.path.join(self.temp_dir, "small1.txt")

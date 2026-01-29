@@ -26,5 +26,5 @@ override_dh_auto_install:
 
 override_dh_fixperms:
 	dh_fixperms
-	chmod +x debian/debian-storage-analyzer/usr/bin/debian-storage-analyzer-launcher
+	chmod +x debian/debian-storage-analyzer/usr/bin/debian-storage-analyzer
 	chmod +x debian/debian-storage-analyzer/usr/libexec/debian-storage-analyzer-helper

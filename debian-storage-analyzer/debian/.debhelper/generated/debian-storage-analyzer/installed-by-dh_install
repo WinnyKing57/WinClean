@@ -10,4 +10,4 @@
 ./data/polkit/fr.jules.debianstorageanalyzer.policy
 ./data/metainfo/fr.jules.debianstorageanalyzer.desktop.metainfo.xml
 ./data/applications/fr.jules.debianstorageanalyzer.desktop
-./debian-storage-analyzer-launcher
+./debian-storage-analyzer

@@ -1,8 +1,8 @@
 Package: debian-storage-analyzer
 Version: 3.1.0
 Architecture: all
-Maintainer: WinnyKing <winnyking.site@gmail.com>
-Installed-Size: 495
+Maintainer: Jules <jules@debian>
+Installed-Size: 493
 Depends: python3, python3-gi, gir1.2-gtk-3.0, python3-psutil, python3-gi-cairo, python3-matplotlib, python3-pandas, python3-reportlab, python3-pil, python3-numpy, nautilus | pcmanfm | thunar | dolphin
 Suggests: polkit
 Section: utils
