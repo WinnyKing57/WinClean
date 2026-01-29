@@ -2,7 +2,7 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gdk, GLib, Gio
+from gi.repository import Gtk, Gdk, GLib, Gio, GObject
 import gettext
 from typing import List, Dict, Any, Callable, Optional
 from dataclasses import dataclass
@@ -315,7 +315,7 @@ class EnhancedTreeView(Gtk.TreeView):
 
 
 # Enregistrer les signaux personnalisés
-GLib.signal_new("files-dropped", EnhancedTreeView, GLib.SignalFlags.RUN_LAST,
-                GLib.TYPE_NONE, (GLib.TYPE_PYOBJECT,))
-GLib.signal_new("text-dropped", EnhancedTreeView, GLib.SignalFlags.RUN_LAST,
-                GLib.TYPE_NONE, (GLib.TYPE_STRING,))
+GObject.signal_new("files-dropped", EnhancedTreeView, GObject.SignalFlags.RUN_LAST,
+                GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT,))
+GObject.signal_new("text-dropped", EnhancedTreeView, GObject.SignalFlags.RUN_LAST,
+                GObject.TYPE_NONE, (GObject.TYPE_STRING,))

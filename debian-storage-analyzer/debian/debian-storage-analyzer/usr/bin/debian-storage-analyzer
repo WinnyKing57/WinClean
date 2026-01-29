@@ -2,11 +2,6 @@
 # Lanceur pour Debian Storage Analyzer v3.1
 # Ce script lance l'application avec le bon environnement Python
 
-# Debug: afficher les informations d'environnement
-echo "DEBUG: Python utilisé: /usr/bin/python3"
-echo "DEBUG: Version Python: $(/usr/bin/python3 --version)"
-echo "DEBUG: PATH: $PATH"
-
 # Utiliser le Python système pour éviter les conflits avec conda/venv
 PYTHON_CMD="/usr/bin/python3"
 

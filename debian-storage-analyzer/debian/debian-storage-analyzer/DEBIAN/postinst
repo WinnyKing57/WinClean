@@ -1,16 +1,11 @@
 #!/bin/sh
-# postinst script for debian-storage-analyzer v3.0
+# postinst script for debian-storage-analyzer v3.1.0
 
 set -e
 
 case "$1" in
     configure)
-        echo "🚀 Installation de l'Analyseur de Stockage Debian v3.0..."
-        
-        # Créer le lien symbolique pour le lanceur principal
-        if [ -f "/usr/bin/debian-storage-analyzer-launcher" ]; then
-            ln -sf /usr/bin/debian-storage-analyzer-launcher /usr/bin/debian-storage-analyzer
-        fi
+        echo "🚀 Installation de l'Analyseur de Stockage Debian v3.1.0..."
         
         # Mettre à jour la base de données des applications desktop
         if command -v update-desktop-database >/dev/null 2>&1; then
@@ -32,14 +27,14 @@ case "$1" in
         
         # Informer l'utilisateur
         echo ""
-        echo "🎉 Analyseur de Stockage Debian v3.0 installé avec succès!"
+        echo "🎉 Analyseur de Stockage Debian v3.1.0 installé avec succès!"
         echo ""
         echo "🎯 Vous pouvez maintenant:"
         echo "   • Le lancer depuis le menu Applications > Système"
         echo "   • Le chercher dans Discover/Software Center"
         echo "   • L'exécuter avec: debian-storage-analyzer"
         echo ""
-        echo "✨ Nouvelles fonctionnalités v3.0:"
+        echo "✨ Nouvelles fonctionnalités v3.1.0:"
         echo "   • Interface moderne avec thèmes adaptatifs"
         echo "   • Clic droit sur fichiers pour ouvrir dans l'explorateur"
         echo "   • Graphiques interactifs et détection de doublons"

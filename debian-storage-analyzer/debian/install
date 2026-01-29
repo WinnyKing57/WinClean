@@ -17,4 +17,4 @@ data/metainfo/*.xml usr/share/metainfo/
 data/applications/*.desktop usr/share/applications/
 
 # Le script lanceur principal
-debian-storage-analyzer-launcher usr/bin/
+debian-storage-analyzer usr/bin/

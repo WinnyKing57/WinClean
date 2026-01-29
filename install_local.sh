@@ -12,12 +12,15 @@ mkdir -p ~/.local/share/metainfo
 
 # Copier le lanceur principal
 echo "📁 Installation du lanceur..."
-cat > ~/.local/bin/debian-storage-analyzer << 'EOF'
-#!/bin/bash
-SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
-PROJECT_DIR="$HOME/Depot Github prso/WinClean/WinClean/debian-storage-analyzer"
+# On récupère le chemin absolu du projet actuel
+CURRENT_PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/debian-storage-analyzer"
 
-if [ -d "$PROJECT_DIR" ]; then
+cat > ~/.local/bin/debian-storage-analyzer << EOF
+#!/bin/bash
+SCRIPT_DIR="\$(dirname "\$(readlink -f "\$0")")"
+PROJECT_DIR="$CURRENT_PROJECT_DIR"
+
+if [ -d "\$PROJECT_DIR" ]; then
     cd "$PROJECT_DIR"
     exec python3 simple_launcher.py "$@"
 else
