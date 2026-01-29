@@ -1,0 +1,27 @@
+#!/bin/bash
+# Lanceur pour Debian Storage Analyzer v3.1
+# Ce script lance l'application avec le bon environnement Python
+
+# Utiliser le Python système pour éviter les conflits avec conda/venv
+PYTHON_CMD="/usr/bin/python3"
+
+# Vérifier que Python3 est disponible
+if [ ! -x "$PYTHON_CMD" ]; then
+    echo "Erreur: Python3 n'est pas installé ou non accessible"
+    echo "Installez Python3 avec: sudo apt install python3"
+    exit 1
+fi
+
+# Répertoire d'installation de l'application
+APP_DIR="/usr/share/debian-storage-analyzer"
+
+# Vérifier que l'application est installée
+if [ ! -d "$APP_DIR" ]; then
+    echo "Erreur: L'application n'est pas installée correctement"
+    echo "Répertoire manquant: $APP_DIR"
+    exit 1
+fi
+
+# Lancer l'application avec le bon répertoire de travail
+cd "$APP_DIR"
+exec "$PYTHON_CMD" simple_launcher.py "$@"

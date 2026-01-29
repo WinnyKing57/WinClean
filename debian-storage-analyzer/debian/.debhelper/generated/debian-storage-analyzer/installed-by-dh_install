@@ -1,0 +1,13 @@
+./src/__init__.py
+./src/analyzer
+./src/cleaner
+./src/config
+./src/helpers
+./src/main
+./src/ui
+./simple_launcher.py
+./src/helpers/helper.py
+./data/polkit/fr.jules.debianstorageanalyzer.policy
+./data/metainfo/fr.jules.debianstorageanalyzer.desktop.metainfo.xml
+./data/applications/fr.jules.debianstorageanalyzer.desktop
+./debian-storage-analyzer-launcher

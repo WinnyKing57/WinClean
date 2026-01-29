@@ -6,7 +6,25 @@
 %:
 	dh $@
 
+# Nettoyer complètement avant le build
+override_dh_clean:
+	dh_clean
+	rm -rf debian/debian-storage-analyzer
+	rm -rf debian/.debhelper
+	rm -rf debian/tmp
+	rm -f debian/files
+	rm -f debian/debhelper-build-stamp
+	rm -f debian/*.substvars
+	rm -f debian/*.log
+	rm -f debian/*.debhelper
+
+# Préparer l'installation
+override_dh_auto_install:
+	# S'assurer que le répertoire de destination n'existe pas
+	rm -rf debian/debian-storage-analyzer
+	dh_auto_install
+
 override_dh_fixperms:
 	dh_fixperms
-	chmod +x debian/debian-storage-analyzer/usr/bin/debian-storage-analyzer
+	chmod +x debian/debian-storage-analyzer/usr/bin/debian-storage-analyzer-launcher
 	chmod +x debian/debian-storage-analyzer/usr/libexec/debian-storage-analyzer-helper

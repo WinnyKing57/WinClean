@@ -1,0 +1,32 @@
+Format: 1.8
+Date: Tue, 28 Jan 2025 18:00:00 +0000
+Source: debian-storage-analyzer
+Binary: debian-storage-analyzer
+Architecture: all
+Version: 3.1.0
+Distribution: unstable
+Urgency: medium
+Maintainer: WinnyKing <winnyking.site@gmail.com>
+Changed-By: Jules <jules@debian>
+Description:
+ debian-storage-analyzer - Analyseur de Stockage Debian v3.1 - Interface moderne avancée
+Changes:
+ debian-storage-analyzer (3.1.0) unstable; urgency=medium
+ .
+   * Mise à jour v3.1.0 - Améliorations structurelles et fonctionnelles.
+   * Refonte de l'architecture : passage à une structure modulaire par pages.
+   * Amélioration du packaging : suppression du loop d'installation dans postinst.
+   * Ajout d'une barre de recherche/filtre dans l'analyseur de stockage.
+   * Nouvelles fonctionnalités : Scanner "Gros fichiers" (>100Mo) et Nettoyage Intelligent.
+   * Interface : Support des couleurs d'accentuation et animations améliorées.
+   * Optimisation : Scan des dossiers itératif (plus de récursion) pour plus de stabilité.
+   - Correction du lanceur pour une meilleure détection des dépendances.
+Checksums-Sha1:
+ 9ae40a55bd7f2389702f4f3a4650b039a12e675f 75456 debian-storage-analyzer_3.1.0_all.deb
+ f4f7c887d7b5fecef9e137ca9a8900855d4ff95e 5211 debian-storage-analyzer_3.1.0_amd64.buildinfo
+Checksums-Sha256:
+ feb2086031e315a19f77cbe39dae133c056345795c76e0c5c3dad42bf1573990 75456 debian-storage-analyzer_3.1.0_all.deb
+ 9853fb9095e610f51850038db33ee0a51c8c57cdeabc8e3108d0ec2476f4dbb0 5211 debian-storage-analyzer_3.1.0_amd64.buildinfo
+Files:
+ a803dfa3c2040b101a1e13d51c6faf35 75456 utils optional debian-storage-analyzer_3.1.0_all.deb
+ f2c21c7bcc0b9bb9b5bf327d13ee9f98 5211 utils optional debian-storage-analyzer_3.1.0_amd64.buildinfo

@@ -1,0 +1,40 @@
+debian-storage-analyzer (3.1.0) unstable; urgency=medium
+
+  * Mise à jour v3.1.0 - Améliorations structurelles et fonctionnelles.
+  * Refonte de l'architecture : passage à une structure modulaire par pages.
+  * Amélioration du packaging : suppression du loop d'installation dans postinst.
+  * Ajout d'une barre de recherche/filtre dans l'analyseur de stockage.
+  * Nouvelles fonctionnalités : Scanner "Gros fichiers" (>100Mo) et Nettoyage Intelligent.
+  * Interface : Support des couleurs d'accentuation et animations améliorées.
+  * Optimisation : Scan des dossiers itératif (plus de récursion) pour plus de stabilité.
+  - Correction du lanceur pour une meilleure détection des dépendances.
+
+ -- Jules <jules@debian>  Tue, 28 Jan 2025 18:00:00 +0000
+
+debian-storage-analyzer (3.0.0) unstable; urgency=medium
+
+  * Major Release Version 3.0.0 - Interface Moderne Avancée.
+  * Installation automatique des dépendances lors de l'installation .deb.
+  * Interface moderne avec sidebar et thèmes adaptatifs.
+  * Graphiques interactifs et tableaux triables avec colonnes.
+  * Intégration explorateur de fichiers (clic droit, ouverture dossiers).
+  * Détection de doublons avec hash SHA-256.
+  * Analyse par catégories de fichiers (images, vidéos, documents).
+  * Surveillance système temps réel avec notifications.
+  * Historique des analyses et nettoyages avec tendances.
+  * Nettoyage intelligent avec mode dry-run et prévisualisation.
+  * Support multi-format packages (.deb, Flatpak, Snap).
+  * Intégration complète avec Discover et menu système.
+  * Configuration avancée avec sauvegarde/restauration.
+
+ -- WinnyKing <winnyking.site@gmail.com>  Tue, 28 Jan 2025 15:30:00 +0000
+
+debian-storage-analyzer (2.0.0) unstable; urgency=medium
+
+  * Major Release Version 2.0.0.
+  * Improved UI/UX with modern design.
+  * Integrated history tracking and reporting.
+  * Full desktop integration.
+  * Developer changed to WinnyKing.
+
+ -- WinnyKing <winnyking.site@gmail.com>  Wed, 31 Jul 2024 12:00:00 +0000

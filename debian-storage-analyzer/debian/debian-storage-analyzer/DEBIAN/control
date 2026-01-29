@@ -1,0 +1,24 @@
+Package: debian-storage-analyzer
+Version: 3.1.0
+Architecture: all
+Maintainer: WinnyKing <winnyking.site@gmail.com>
+Installed-Size: 495
+Depends: python3, python3-gi, gir1.2-gtk-3.0, python3-psutil, python3-gi-cairo, python3-matplotlib, python3-pandas, python3-reportlab, python3-pil, python3-numpy, nautilus | pcmanfm | thunar | dolphin
+Suggests: polkit
+Section: utils
+Priority: optional
+Homepage: https://github.com/WinnyKing57/WinClean
+Description: Analyseur de Stockage Debian v3.1 - Interface moderne avancée
+ Application GTK moderne pour analyser et nettoyer l'espace disque avec
+ interface avancée, graphiques interactifs et intégration explorateur.
+ .
+ Nouvelles fonctionnalités v3.1 :
+  - Interface moderne avec sidebar et thèmes adaptatifs
+  - Graphiques interactifs et tableaux triables
+  - Intégration avec l'explorateur de fichiers (clic droit)
+  - Détection de doublons et analyse par catégories
+  - Surveillance temps réel et historique
+  - Installation automatique des dépendances
+  - Nettoyage intelligent avec prévisualisation
+  .
+ L'application s'intègre parfaitement avec Discover et le menu système.
